@@ -1,6 +1,8 @@
 package com.grupo4.projetofinalapi.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table (uniqueConstraints = {
@@ -14,9 +16,11 @@ public class ItemPedido {
 	@Column (name = "cod_item_pedido", nullable = false, columnDefinition = "serial")
 	private Long id;
 	
+	@NotNull
 	@Column (nullable = false)
 	private int quantidade;
 	
+	@NotBlank
 	@Column (nullable = false, columnDefinition = "numeric(7,2)")
 	private Double precoUnitario;
 	
