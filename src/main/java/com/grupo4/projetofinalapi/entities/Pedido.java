@@ -33,10 +33,10 @@ public class Pedido {
 	@Column (name = "cod_pedido", nullable = false, columnDefinition = "serial")
 	private Long id;
 	
-	// TODO Criar validação de data
+	
 	@NotNull
 	@PastOrPresent
-	@DateTimeFormat (pattern = "yyyy-MM-dd")
+	@DateTimeFormat (pattern = "dd/MM/yyyy")
 	@Column (name = "data_pedido", nullable = false)
 	private LocalDateTime dataPedido;
 	

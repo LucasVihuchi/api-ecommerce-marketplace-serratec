@@ -12,6 +12,8 @@ import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 /*
  * - Visualizar todos os produtos ou um produto específico pelo nome
  * - Criar um novo produto (com imagem).
@@ -43,9 +45,11 @@ public class Produto {
 	
 	@Past
 	@Column
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private LocalDate dataFabricacao;
 	
 	@NotNull
+	@PositiveOrZero
 	@Column (nullable = false)
 	private int tempoGarantia;
 	
