@@ -123,10 +123,27 @@ public class Usuario {
 		this.listaPedidosFeitos = listaPedidosFeitos;
 		this.listaPedidosRecebidos = listaPedidosRecebidos;
 	}
-
-
-
 	
+	public Usuario(@NotBlank String nome, @NotBlank String sobrenome, @NotNull Sexo sexo,
+			@NotBlank String telefonePrincipal, @NotBlank String telefoneSecundario, @NotBlank String nomeUsuario,
+			@NotBlank String senhaUsuario, @NotBlank @Email String email, @NotNull @CPF String cpf,
+			@NotNull @Past LocalDate dataNascimento, @NotNull boolean ehVendedor, Endereco endereco) {
+		super();
+		this.nome = nome;
+		this.sobrenome = sobrenome;
+		this.sexo = sexo;
+		this.telefonePrincipal = telefonePrincipal;
+		this.telefoneSecundario = telefoneSecundario;
+		this.nomeUsuario = nomeUsuario;
+		this.senhaUsuario = senhaUsuario;
+		this.email = email;
+		this.cpf = cpf;
+		this.dataNascimento = dataNascimento;
+		this.ehVendedor = ehVendedor;
+		this.endereco = endereco;
+	}
+
+
 	public Long getId() {
 		return id;
 	}

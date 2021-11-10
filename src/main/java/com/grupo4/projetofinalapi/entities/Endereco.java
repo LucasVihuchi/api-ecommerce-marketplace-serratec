@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import com.grupo4.projetofinalapi.dto.EnderecoDTO;
 
@@ -28,6 +29,7 @@ public class Endereco {
 	private int numero;
 	
 	@NotBlank
+	@Size(min = 8, max = 8)
 	@Column (nullable = false, length = 8)
 	private String cep;
 	
@@ -46,15 +48,12 @@ public class Endereco {
 	@Column (nullable = false)
 	private String estado;
 
-	@OneToMany (mappedBy = "endereco")
-	private List<Usuario> listaUsuarios;
-
 	public Endereco() {
 		super();
 	}
-
+	
 	public Endereco(Long id, @NotBlank String logradouro, int numero, @NotBlank String cep, String complemento,
-			@NotBlank String bairro, @NotBlank String cidade, @NotBlank String estado, List<Usuario> listaUsuarios) {
+			@NotBlank String bairro, @NotBlank String cidade, @NotBlank String estado) {
 		super();
 		this.id = id;
 		this.logradouro = logradouro;
@@ -64,10 +63,9 @@ public class Endereco {
 		this.bairro = bairro;
 		this.cidade = cidade;
 		this.estado = estado;
-		this.listaUsuarios = listaUsuarios;
 	}
-	
-	
+
+
 
 	public Long getId() {
 		return id;
@@ -132,25 +130,10 @@ public class Endereco {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-
-	public List<Usuario> getListaUsuarios() {
-		return listaUsuarios;
-	}
-
-	public void setListaUsuarios(List<Usuario> listaUsuarios) {
-		this.listaUsuarios = listaUsuarios;
-	}
-
-	@Override
-	public String toString() {
-		return "Endereco [id=" + id + ", logradouro=" + logradouro + ", numero=" + numero + ", cep=" + cep
-				+ ", complemento=" + complemento + ", bairro=" + bairro + ", cidade=" + cidade + ", estado=" + estado
-				+ ", listaUsuarios=" + listaUsuarios + "]";
-	}
-
-	@Override
+	
+    @Override
 	public int hashCode() {
-		return Objects.hash(bairro, cep, cidade, complemento, estado, id, listaUsuarios, logradouro, numero);
+		return Objects.hash(bairro, cep, cidade, complemento, estado, id, logradouro, numero);
 	}
 
 	@Override
@@ -164,15 +147,15 @@ public class Endereco {
 		Endereco other = (Endereco) obj;
 		return Objects.equals(bairro, other.bairro) && Objects.equals(cep, other.cep)
 				&& Objects.equals(cidade, other.cidade) && Objects.equals(complemento, other.complemento)
-				&& Objects.equals(estado, other.estado) && Objects.equals(id, other.id)
-				&& Objects.equals(listaUsuarios, other.listaUsuarios) && Objects.equals(logradouro, other.logradouro)
+				&& Objects.equals(estado, other.estado)
+				&& Objects.equals(logradouro, other.logradouro)
 				&& numero == other.numero;
 	}
 	
 	public static boolean enderecoEhValido(Endereco endereco, EnderecoDTO enderecoDTO) {
-		boolean logradouroValido = endereco.getLogradouro() == enderecoDTO.getLogradouro();
-		boolean bairroValido = endereco.getBairro() == enderecoDTO.getBairro();
-		boolean cidadeValida = endereco.getCidade() == enderecoDTO.getLocalidade();		
+		boolean logradouroValido = endereco.getLogradouro().equals(enderecoDTO.getLogradouro());
+		boolean bairroValido = endereco.getBairro().equals(enderecoDTO.getBairro());
+		boolean cidadeValida = endereco.getCidade().equals(enderecoDTO.getLocalidade());		
 				
 		return logradouroValido && bairroValido && cidadeValida;
 	}
