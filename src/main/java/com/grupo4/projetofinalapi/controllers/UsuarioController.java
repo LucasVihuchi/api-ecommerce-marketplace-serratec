@@ -7,7 +7,10 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,5 +44,17 @@ public class UsuarioController {
 		return ResponseEntity.created(uri).body(new UsuarioDTO(usuario));
 	
 	}
-
+	
+	@DeleteMapping("{id}")
+	public void deletarUsuario(@PathVariable Long id) {
+		usuarioService.deletarUsuario(id);
+	}
+	
+	@PutMapping("{id}")
+	public UsuarioDTO atualizarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
+		Usuario usuario = usuarioDTO.converterParaUsuario();
+		usuario = usuarioService.atualizarUsuario(id, usuario);
+		
+		return new UsuarioDTO(usuario);
+	}
 }

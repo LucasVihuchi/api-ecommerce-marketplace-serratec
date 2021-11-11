@@ -1,67 +1,56 @@
-package com.grupo4.projetofinalapi.entities;
+package com.grupo4.projetofinalapi.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.grupo4.projetofinalapi.entities.ItemPedido;
+import com.grupo4.projetofinalapi.entities.Pedido;
+import com.grupo4.projetofinalapi.entities.Usuario;
 import com.grupo4.projetofinalapi.enums.StatusPedido;
 
-/*
- * Precisamos fazer o metodo post, put:
- * - Visualizar todos os pedidos.
- * - Criar um novo Pedido
- * - Editar um pedido com status de não finalizado.
- * - Finalizar um pedido, alterar seu status para finalizado.
- * - Ao finalizar o pedido enviar e-mail para o cliente informando data de envio, data de
-entrega, produtos, quantidades e valor final do pedido.
- */
+public class PedidoDTO {
 
-@Entity
-@Table (uniqueConstraints = {
-		@UniqueConstraint (name = "PedidoUnico", columnNames = {"cod_comprador", "cod_vendedor", "data_pedido"})
-})
-public class Pedido {
-		
-	@Id
-	@GeneratedValue (strategy = GenerationType.IDENTITY)
-	@Column (name = "cod_pedido", nullable = false, columnDefinition = "serial")
 	private Long id;
 	
 	
 	@NotNull
 	@PastOrPresent
 	@DateTimeFormat (pattern = "dd/MM/yyyy")
-	@Column (name = "data_pedido", nullable = false)
 	private LocalDateTime dataPedido;
 	
 	@NotNull
-	@Column (nullable = false, columnDefinition = "numeric(7,2)")
 	private Double fretePedido;
 	
 	@Enumerated (EnumType.STRING)
-	@Column (nullable = false)
 	private StatusPedido statusPedido;
 	
-	@ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-	@JoinColumn (name = "cod_comprador", nullable = false, columnDefinition = "int4")
-	private Usuario comprador;
+	private UsuarioDTO comprador;
 	
-	@ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-	@JoinColumn (name = "cod_vendedor", nullable = false, columnDefinition = "int4")
-	private Usuario vendedor;
+
+	private UsuarioDTO vendedor;
 	
-	@OneToMany (mappedBy = "pedido")
 	private List<ItemPedido> listaItemPedido;
 
-	public Pedido(Long id, @NotNull @PastOrPresent LocalDateTime dataPedido, @NotNull Double fretePedido,
-			StatusPedido statusPedido, Usuario comprador, Usuario vendedor, List<ItemPedido> listaItemPedido) {
+	public PedidoDTO(Long id, @NotNull @PastOrPresent LocalDateTime dataPedido, @NotNull Double fretePedido,
+			StatusPedido statusPedido, UsuarioDTO comprador, UsuarioDTO vendedor, List<ItemPedido> listaItemPedido) {
 		this.id = id;
 		this.dataPedido = dataPedido;
 		this.fretePedido = fretePedido;
@@ -71,9 +60,19 @@ public class Pedido {
 		this.listaItemPedido = listaItemPedido;
 	}
 
-	public Pedido() {
+	public PedidoDTO() {
 	}
 
+	public PedidoDTO(Pedido pedido) {
+		this.id = pedido.getId();
+		this.dataPedido = pedido.getDataPedido();
+		this.fretePedido = pedido.getFretePedido();
+		this.statusPedido = pedido.getStatusPedido();
+		this.comprador = new UsuarioDTO(pedido.getComprador());
+		this.vendedor = new UsuarioDTO(pedido.getVendedor());
+		this.listaItemPedido = pedido.getListaItemPedido();
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -106,19 +105,19 @@ public class Pedido {
 		this.statusPedido = statusPedido;
 	}
 
-	public Usuario getComprador() {
+	public UsuarioDTO getComprador() {
 		return comprador;
 	}
 
-	public void setComprador(Usuario comprador) {
+	public void setComprador(UsuarioDTO comprador) {
 		this.comprador = comprador;
 	}
 
-	public Usuario getVendedor() {
+	public UsuarioDTO getVendedor() {
 		return vendedor;
 	}
 
-	public void setVendedor(Usuario vendedor) {
+	public void setVendedor(UsuarioDTO vendedor) {
 		this.vendedor = vendedor;
 	}
 
@@ -143,14 +142,19 @@ public class Pedido {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Pedido other = (Pedido) obj;
+		PedidoDTO other = (PedidoDTO) obj;
 		return Objects.equals(comprador, other.comprador) && Objects.equals(dataPedido, other.dataPedido)
 				&& Objects.equals(fretePedido, other.fretePedido) && Objects.equals(id, other.id)
 				&& Objects.equals(listaItemPedido, other.listaItemPedido) && statusPedido == other.statusPedido
 				&& Objects.equals(vendedor, other.vendedor);
 	}
 	
+	public static List<PedidoDTO> converterParaPedidosDTO(List<Pedido> listaPedidos){
+		List<PedidoDTO> listaPedidosDTO = new ArrayList<>();
+		for (Pedido pedidoAtual : listaPedidos) {
+			listaPedidosDTO.add(new PedidoDTO(pedidoAtual));
+		}
+		return listaPedidosDTO;
+	}
 
-	
-	
 }
