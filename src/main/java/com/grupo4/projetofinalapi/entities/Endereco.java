@@ -1,6 +1,7 @@
 package com.grupo4.projetofinalapi.entities;
 
 import com.grupo4.projetofinalapi.dto.EnderecoDTO;
+import com.grupo4.projetofinalapi.groups.GruposValidacao;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -19,30 +20,30 @@ public class Endereco {
 	@Column (name = "cod_endereco", nullable = false, columnDefinition = "serial")
 	private Long id;
 	
-	@NotBlank
+	@NotBlank(message = "Logradouro não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@Column (nullable = false)
 	private String logradouro;
 	
 	@Column 
 	private int numero;
 	
-	@NotBlank
-	@Size(min = 8, max = 8)
+	@NotBlank(message = "CEP não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
+	@Size(min = 8, max = 8, message = "Tamanho deve ser de {min} caracteres", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
 	@Column (nullable = false, length = 8)
 	private String cep;
 	
 	@Column 
 	private String complemento;
 	
-	@NotBlank
+	@NotBlank(message = "Bairro não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@Column (nullable = false)
 	private String bairro;
 	
-	@NotBlank
+	@NotBlank(message = "Cidade não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@Column (nullable = false)
 	private String cidade;
 	
-	@NotBlank
+	@NotBlank(message = "Estado não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@Column (nullable = false)
 	private String estado;
 

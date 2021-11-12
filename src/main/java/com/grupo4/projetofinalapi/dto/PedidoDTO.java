@@ -3,10 +3,13 @@ package com.grupo4.projetofinalapi.dto;
 import com.grupo4.projetofinalapi.entities.ItemPedido;
 import com.grupo4.projetofinalapi.entities.Pedido;
 import com.grupo4.projetofinalapi.enums.StatusPedido;
+import com.grupo4.projetofinalapi.groups.GruposValidacao;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDateTime;
@@ -18,21 +21,23 @@ public class PedidoDTO {
 
 	private Long id;
 
-	@NotNull
-	@PastOrPresent
+	@PastOrPresent(message = "Data do pedido deve ser igual ou anterior a hoje", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
 	@DateTimeFormat (pattern = "dd/MM/yyyy")
 	private LocalDateTime dataPedido;
 	
-	@NotNull
+	@NotNull(message = "Frete não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
 	private Double fretePedido;
 	
 	@Enumerated (EnumType.STRING)
 	private StatusPedido statusPedido;
 	
+	@NotNull(message = "Comprador não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
 	private UsuarioDTO comprador;
 
+	@NotNull(message = "Vendedor não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
 	private UsuarioDTO vendedor;
 	
+	@NotNull(message = "Lista de produtos não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
 	private List<ItemPedido> listaItemPedido;
 
 	public PedidoDTO() {
@@ -140,6 +145,20 @@ public class PedidoDTO {
 			listaPedidosDTO.add(new PedidoDTO(pedidoAtual));
 		}
 		return listaPedidosDTO;
+	}
+	
+	public Pedido converterParaPedido() {
+		Pedido pedido = new Pedido();
+		pedido.setId(this.getId());
+		pedido.setDataPedido(this.getDataPedido());
+		pedido.setFretePedido(this.getFretePedido());
+		pedido.setStatusPedido(this.getStatusPedido());
+	
+		pedido.setComprador(this.getComprador().converterParaUsuario());
+		pedido.setVendedor(this.getVendedor().converterParaUsuario());
+		pedido.setListaItemPedido(this.getListaItemPedido());
+	
+		return pedido;
 	}
 
 }

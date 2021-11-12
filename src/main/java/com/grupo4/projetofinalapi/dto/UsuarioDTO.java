@@ -3,6 +3,7 @@ package com.grupo4.projetofinalapi.dto;
 import com.grupo4.projetofinalapi.entities.Endereco;
 import com.grupo4.projetofinalapi.entities.Usuario;
 import com.grupo4.projetofinalapi.enums.Sexo;
+import com.grupo4.projetofinalapi.groups.GruposValidacao;
 import com.grupo4.projetofinalapi.validations.ValidDataNascimento;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -16,45 +17,45 @@ public class UsuarioDTO {
 
 	private Long id;
 
-	@NotBlank
+	@NotBlank(message = "Nome não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	private String nome;
 
-	@NotBlank
+	@NotBlank(message = "Sobrenome não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	private String sobrenome;
 
-	@NotNull
+	@NotNull(message = "Sexo não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
 	private Sexo sexo;
 
-	@NotBlank
+	@NotBlank(message = "Telefone principal não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	private String telefonePrincipal;
 
 	private String telefoneSecundario;
 
-	@NotBlank
+	@NotBlank(message = "Nome de usuário não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	private String nomeUsuario;
 
-	@NotBlank
+	@NotBlank(message = "Senha não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	private String senhaUsuario;
 
-	@NotBlank
-	@Email
+	@NotBlank(message = "E-mail não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
+	@Email(message = "E-mail inválido", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
 	private String email;
 
-	@NotBlank
-	@CPF
+	@NotBlank(message = "CPF não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
+	@CPF(message = "CPF inválido", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
 	private String cpf;
 
-	@NotNull
-	@ValidDataNascimento
-	@Past
+	@NotNull(message = "Data de nascimento não pode ser nula", groups = {GruposValidacao.ValidadorPost.class})
+	@ValidDataNascimento(message = "Usuário deve ser possuir mais de 18 anos ou menos de 120", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
+	@Past(message = "Data de nascimento deve ser anterior a hoje", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
 	// TODO Verificar formatação da data
 	//@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private LocalDate dataNascimento;
 
-	@NotNull
+	
 	private boolean ehVendedor;
 
-	@NotNull
+	@NotNull(message = "Endereço não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
 	private Endereco endereco;
 
 	public UsuarioDTO(Long id,

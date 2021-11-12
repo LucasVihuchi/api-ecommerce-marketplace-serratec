@@ -1,9 +1,11 @@
 package com.grupo4.projetofinalapi.controllers;
 
 import com.grupo4.projetofinalapi.entities.Categoria;
+import com.grupo4.projetofinalapi.groups.GruposValidacao;
 import com.grupo4.projetofinalapi.services.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -28,7 +30,7 @@ public class CategoriaController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Object> inserirCategoria(@RequestBody Categoria categoria){
+	public ResponseEntity<Object> inserirCategoria(@Validated(GruposValidacao.ValidadorPost.class) @RequestBody Categoria categoria){
 		categoria = categoriaService.inserirCategoria(categoria);
 
 		URI uri = ServletUriComponentsBuilder
