@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 @Table (uniqueConstraints = {
 		@UniqueConstraint (name = "ItemPedidoUnico", columnNames = {"cod_produto", "cod_pedido"})
 })
-
 public class ItemPedido {
 
 	@Id

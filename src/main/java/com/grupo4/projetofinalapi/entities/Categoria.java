@@ -1,10 +1,8 @@
 package com.grupo4.projetofinalapi.entities;
 
-import java.util.List;
-import java.util.Objects;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.Objects;
 
 /*
  * Temos que fazer o GetAll e o GetCategoriaPorNome; post
@@ -12,7 +10,6 @@ import javax.validation.constraints.NotBlank;
  * - Criar uma nova categoria.
  * -
  */
-
 
 @Entity
 public class Categoria {
@@ -30,14 +27,13 @@ public class Categoria {
 	@Column (nullable = false)
 	private String descricao;
 
-	public Categoria(Long id, @NotBlank String nome, @NotBlank String descricao) {
-		super();
+	public Categoria() {
+	}
+
+	public Categoria(Long id, String nome, String descricao) {
 		this.id = id;
 		this.nome = nome;
 		this.descricao = descricao;
-	}
-
-	public Categoria() {
 	}
 
 	public Long getId() {

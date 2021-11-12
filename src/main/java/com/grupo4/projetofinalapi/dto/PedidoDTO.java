@@ -1,36 +1,23 @@
 package com.grupo4.projetofinalapi.dto;
 
+import com.grupo4.projetofinalapi.entities.ItemPedido;
+import com.grupo4.projetofinalapi.entities.Pedido;
+import com.grupo4.projetofinalapi.enums.StatusPedido;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.grupo4.projetofinalapi.entities.ItemPedido;
-import com.grupo4.projetofinalapi.entities.Pedido;
-import com.grupo4.projetofinalapi.entities.Usuario;
-import com.grupo4.projetofinalapi.enums.StatusPedido;
-
 public class PedidoDTO {
 
 	private Long id;
-	
-	
+
 	@NotNull
 	@PastOrPresent
 	@DateTimeFormat (pattern = "dd/MM/yyyy")
@@ -43,14 +30,15 @@ public class PedidoDTO {
 	private StatusPedido statusPedido;
 	
 	private UsuarioDTO comprador;
-	
 
 	private UsuarioDTO vendedor;
 	
 	private List<ItemPedido> listaItemPedido;
 
-	public PedidoDTO(Long id, @NotNull @PastOrPresent LocalDateTime dataPedido, @NotNull Double fretePedido,
-			StatusPedido statusPedido, UsuarioDTO comprador, UsuarioDTO vendedor, List<ItemPedido> listaItemPedido) {
+	public PedidoDTO() {
+	}
+
+	public PedidoDTO(Long id, LocalDateTime dataPedido, Double fretePedido, StatusPedido statusPedido, UsuarioDTO comprador, UsuarioDTO vendedor, List<ItemPedido> listaItemPedido) {
 		this.id = id;
 		this.dataPedido = dataPedido;
 		this.fretePedido = fretePedido;
@@ -58,9 +46,6 @@ public class PedidoDTO {
 		this.comprador = comprador;
 		this.vendedor = vendedor;
 		this.listaItemPedido = listaItemPedido;
-	}
-
-	public PedidoDTO() {
 	}
 
 	public PedidoDTO(Pedido pedido) {

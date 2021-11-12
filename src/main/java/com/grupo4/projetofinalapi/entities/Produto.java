@@ -1,18 +1,10 @@
 package com.grupo4.projetofinalapi.entities;
 
-import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
-
-import org.springframework.format.annotation.DateTimeFormat;
+import javax.validation.constraints.*;
+import java.time.LocalDate;
 
 /*
  * - Visualizar todos os produtos ou um produto específico pelo nome
@@ -24,7 +16,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 public class Produto {
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column (name = "cod_produto", nullable = false, columnDefinition = "serial")
@@ -60,6 +51,7 @@ public class Produto {
 	
 	@ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinColumn (name = "cod_vendedor", nullable = false, columnDefinition = "int4")
+	// TODO Verificar se JSONIgnore já resolve a questão dos dados
 	private Usuario vendedor;
 	
 	@ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.MERGE)

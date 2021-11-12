@@ -8,12 +8,10 @@ public class ErroRespostaBody {
 	private int status;
 	private String titulo;
 	private List<String> listaErros;
-	
-	
+
 	public ErroRespostaBody() {
 		this.horarioErro = LocalDateTime.now();
 	}
-
 
 	public ErroRespostaBody(LocalDateTime horarioErro, int status, String titulo, List<String> listaErros) {
 		this();
@@ -25,50 +23,36 @@ public class ErroRespostaBody {
 		this.listaErros = listaErros;
 	}
 
-
 	public LocalDateTime getHorarioErro() {
 		return horarioErro;
 	}
-
 
 	public void setHorarioErro(LocalDateTime horarioErro) {
 		this.horarioErro = horarioErro;
 	}
 
-
 	public int getStatus() {
 		return status;
 	}
-
 
 	public void setStatus(int status) {
 		this.status = status;
 	}
 
-
 	public String getTitulo() {
 		return titulo;
 	}
-
 
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
 	}
 
-
 	public List<String> getListaErros() {
 		return listaErros;
 	}
 
-
 	public void setListaErros(List<String> listaErros) {
 		this.listaErros = listaErros;
 	}
-	
-	
-	
-	
-	
-	
 
 }

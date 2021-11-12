@@ -1,15 +1,14 @@
 package com.grupo4.projetofinalapi.handlers;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.grupo4.projetofinalapi.entities.ErroRespostaBody;
+import com.grupo4.projetofinalapi.exceptions.EnderecoInvalidoException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.grupo4.projetofinalapi.entities.ErroRespostaBody;
-import com.grupo4.projetofinalapi.exceptions.EnderecoInvalidoException;
+import java.util.ArrayList;
+import java.util.List;
 
 @ControllerAdvice
 public class EnderecoInvalidoExceptionHandler {

@@ -1,12 +1,12 @@
 package com.grupo4.projetofinalapi.services;
 
-import java.util.List;
-
+import com.grupo4.projetofinalapi.entities.Produto;
+import com.grupo4.projetofinalapi.exceptions.ProdutoInexistenteException;
+import com.grupo4.projetofinalapi.repositories.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.grupo4.projetofinalapi.entities.Produto;
-import com.grupo4.projetofinalapi.repositories.ProdutoRepository;
+import java.util.List;
 
 @Service
 public class ProdutoService {
@@ -19,6 +19,7 @@ public class ProdutoService {
 	}
 	
 	public Produto obterProdutoPorNome(String nome){
-		return produtoRepository.findProdutoByNome(nome);
+		return produtoRepository.findProdutoByNomeIgnoreCase(nome)
+				.orElseThrow(() -> new ProdutoInexistenteException("Produto '" + nome + "' não existe"));
 	}
 }

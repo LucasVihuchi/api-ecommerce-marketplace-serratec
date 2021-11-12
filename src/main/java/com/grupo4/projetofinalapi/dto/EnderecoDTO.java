@@ -16,7 +16,6 @@ public class EnderecoDTO {
 	private String siafi;
 	
 	public EnderecoDTO(){
-		
 	}
 
 	public EnderecoDTO(String cep, String logradouro, String complemento, String bairro, String localidade, String uf,
@@ -34,8 +33,6 @@ public class EnderecoDTO {
 		this.siafi = siafi;
 	}
 
-
-	
 	public String getCep() {
 		return cep;
 	}

@@ -1,8 +1,6 @@
 package com.grupo4.projetofinalapi.handlers;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.grupo4.projetofinalapi.entities.ErroRespostaBody;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,14 +9,14 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import com.grupo4.projetofinalapi.entities.ErroRespostaBody;
 
+import java.util.ArrayList;
+import java.util.List;
 
 @ControllerAdvice
 public class MethodArgumentNotValidExceptionHandler extends ResponseEntityExceptionHandler{
 
 	@Override
-
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		
@@ -34,7 +32,4 @@ public class MethodArgumentNotValidExceptionHandler extends ResponseEntityExcept
 		
 		return super.handleExceptionInternal(ex, erroBody, headers, status, request);
 	}
-	
-	
-
 }

@@ -1,22 +1,19 @@
 package com.grupo4.projetofinalapi.entities;
 
+import com.grupo4.projetofinalapi.enums.Sexo;
+import com.grupo4.projetofinalapi.validations.ValidDataNascimento;
+import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Future;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
-import javax.validation.constraints.Pattern;
-
-import org.hibernate.validator.constraints.br.CPF;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.grupo4.projetofinalapi.enums.Sexo;
-import com.grupo4.projetofinalapi.validations.ValidDataNascimento;
 /*
  * Precisamos fazer o metodo post, put, delete:
  * - Atualizar seus próprios dados pessoais.
@@ -81,8 +78,8 @@ public class Usuario {
 	@Column (nullable = false)
 	private boolean ehVendedor;
 	
-	@ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn (name = "cod_endereco", nullable = false, columnDefinition = "int4")
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn (name = "cod_endereco", nullable = false, unique = true, columnDefinition = "int4")
 	private Endereco endereco;
 	
 	@OneToMany (mappedBy = "vendedor")
@@ -99,13 +96,22 @@ public class Usuario {
 		super();
 	}
 
-
-	public Usuario(Long id, @NotBlank String nome, @NotBlank String sobrenome, @NotNull Sexo sexo,
-			@NotBlank String telefonePrincipal, @NotBlank String telefoneSecundario, @NotBlank String nomeUsuario,
-			@NotBlank String senhaUsuario, @NotBlank @Email String email, @NotNull @CPF String cpf,
-			@NotNull @Past LocalDate dataNascimento, @NotNull boolean ehVendedor, Endereco endereco,
-			List<Produto> listaProdutos, List<Pedido> listaPedidosFeitos, List<Pedido> listaPedidosRecebidos) {
-		super();
+	public Usuario(Long id,
+				   String nome,
+				   String sobrenome,
+				   Sexo sexo,
+				   String telefonePrincipal,
+				   String telefoneSecundario,
+				   String nomeUsuario,
+				   String senhaUsuario,
+				   String email,
+				   String cpf,
+				   LocalDate dataNascimento,
+				   boolean ehVendedor,
+				   Endereco endereco,
+				   List<Produto> listaProdutos,
+				   List<Pedido> listaPedidosFeitos,
+				   List<Pedido> listaPedidosRecebidos) {
 		this.id = id;
 		this.nome = nome;
 		this.sobrenome = sobrenome;
@@ -123,12 +129,19 @@ public class Usuario {
 		this.listaPedidosFeitos = listaPedidosFeitos;
 		this.listaPedidosRecebidos = listaPedidosRecebidos;
 	}
-	
-	public Usuario(@NotBlank String nome, @NotBlank String sobrenome, @NotNull Sexo sexo,
-			@NotBlank String telefonePrincipal, @NotBlank String telefoneSecundario, @NotBlank String nomeUsuario,
-			@NotBlank String senhaUsuario, @NotBlank @Email String email, @NotNull @CPF String cpf,
-			@NotNull @Past LocalDate dataNascimento, @NotNull boolean ehVendedor, Endereco endereco) {
-		super();
+
+	public Usuario(String nome,
+				   String sobrenome,
+				   Sexo sexo,
+				   String telefonePrincipal,
+				   String telefoneSecundario,
+				   String nomeUsuario,
+				   String senhaUsuario,
+				   String email,
+				   String cpf,
+				   LocalDate dataNascimento,
+				   boolean ehVendedor,
+				   Endereco endereco) {
 		this.nome = nome;
 		this.sobrenome = sobrenome;
 		this.sexo = sexo;
@@ -142,7 +155,6 @@ public class Usuario {
 		this.ehVendedor = ehVendedor;
 		this.endereco = endereco;
 	}
-
 
 	public Long getId() {
 		return id;
@@ -170,6 +182,7 @@ public class Usuario {
 	public void setSobrenome(String sobrenome) {
 		this.sobrenome = sobrenome;
 	}
+
 	public Sexo getSexo() {
 		return sexo;
 	}
@@ -214,11 +227,9 @@ public class Usuario {
 		return email;
 	}
 
-
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
 
 	public String getCpf() {
 		return cpf;
@@ -276,7 +287,6 @@ public class Usuario {
 		this.listaPedidosRecebidos = listaPedidosRecebidos;
 	}
 
-
 	@Override
 	public String toString() {
 		return "Usuario [id=" + id + ", nome=" + nome + ", sobrenome=" + sobrenome + ", sexo=" + sexo
@@ -316,8 +326,4 @@ public class Usuario {
 				&& Objects.equals(telefonePrincipal, other.telefonePrincipal)
 				&& Objects.equals(telefoneSecundario, other.telefoneSecundario);
 	}
-	
-	
-	
-	
 }

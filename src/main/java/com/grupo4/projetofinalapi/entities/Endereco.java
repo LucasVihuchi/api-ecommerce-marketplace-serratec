@@ -1,13 +1,11 @@
 package com.grupo4.projetofinalapi.entities;
 
-import java.util.List;
-import java.util.Objects;
+import com.grupo4.projetofinalapi.dto.EnderecoDTO;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
-import com.grupo4.projetofinalapi.dto.EnderecoDTO;
+import java.util.Objects;
 
 /*
  * - O endereço deverá ser validado através da API Via Cep.
@@ -51,10 +49,15 @@ public class Endereco {
 	public Endereco() {
 		super();
 	}
-	
-	public Endereco(Long id, @NotBlank String logradouro, int numero, @NotBlank String cep, String complemento,
-			@NotBlank String bairro, @NotBlank String cidade, @NotBlank String estado) {
-		super();
+
+	public Endereco(Long id,
+					String logradouro,
+					int numero,
+					String cep,
+					String complemento,
+					String bairro,
+					String cidade,
+					String estado) {
 		this.id = id;
 		this.logradouro = logradouro;
 		this.numero = numero;
@@ -65,7 +68,13 @@ public class Endereco {
 		this.estado = estado;
 	}
 
+	public static boolean enderecoEhValido(Endereco endereco, EnderecoDTO enderecoDTO) {
+		boolean logradouroValido = endereco.getLogradouro().equals(enderecoDTO.getLogradouro());
+		boolean bairroValido = endereco.getBairro().equals(enderecoDTO.getBairro());
+		boolean cidadeValida = endereco.getCidade().equals(enderecoDTO.getLocalidade());
 
+		return logradouroValido && bairroValido && cidadeValida;
+	}
 
 	public Long getId() {
 		return id;
@@ -151,13 +160,4 @@ public class Endereco {
 				&& Objects.equals(logradouro, other.logradouro)
 				&& numero == other.numero;
 	}
-	
-	public static boolean enderecoEhValido(Endereco endereco, EnderecoDTO enderecoDTO) {
-		boolean logradouroValido = endereco.getLogradouro().equals(enderecoDTO.getLogradouro());
-		boolean bairroValido = endereco.getBairro().equals(enderecoDTO.getBairro());
-		boolean cidadeValida = endereco.getCidade().equals(enderecoDTO.getLocalidade());		
-				
-		return logradouroValido && bairroValido && cidadeValida;
-	}
-	
 }

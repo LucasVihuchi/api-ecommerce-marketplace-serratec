@@ -1,10 +1,9 @@
 package com.grupo4.projetofinalapi.validations;
 
-import java.time.LocalDate;
-import java.time.Period;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.time.LocalDate;
+import java.time.Period;
 
 public class DataNascimentoValidator implements ConstraintValidator<ValidDataNascimento, LocalDate>{
 
@@ -14,7 +13,5 @@ public class DataNascimentoValidator implements ConstraintValidator<ValidDataNas
 		
 		Period diferencaEntreDatas = Period.between(dataRecebida, hoje);
 		return ((diferencaEntreDatas.getYears() >= 18) && (diferencaEntreDatas.getYears() <=120) && (!diferencaEntreDatas.isNegative()));
-		
 	}
-	
 }

@@ -1,21 +1,15 @@
 package com.grupo4.projetofinalapi.controllers;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.grupo4.projetofinalapi.entities.Categoria;
 import com.grupo4.projetofinalapi.services.CategoriaService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-		
+import java.net.URI;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/categorias")
 public class CategoriaController {
@@ -24,18 +18,25 @@ public class CategoriaController {
 	private CategoriaService categoriaService;
 	
 	@GetMapping
-	public List<Categoria> obterCategorias(){
-		return categoriaService.obterCategorias();
+	public ResponseEntity<List<Categoria>> obterCategorias(){
+		return ResponseEntity.ok().body(categoriaService.obterCategorias());
 	}
 	
 	@GetMapping("{nome}")
-	public Categoria obterCategoriaPorNome(@PathVariable String nome){
-		return categoriaService.obterCategoriaPorNome(nome);
+	public ResponseEntity<Categoria> obterCategoriaPorNome(@PathVariable String nome){
+		return ResponseEntity.ok().body(categoriaService.obterCategoriaPorNome(nome));
 	}
 	
 	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public void inserirCategoria(@RequestBody Categoria categoria){
-		categoriaService.inserirCategoria(categoria);
+	public ResponseEntity<Object> inserirCategoria(@RequestBody Categoria categoria){
+		categoria = categoriaService.inserirCategoria(categoria);
+
+		URI uri = ServletUriComponentsBuilder
+				.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(categoria.getId())
+				.toUri();
+
+		return ResponseEntity.created(uri).body(categoria);
 	}
 }

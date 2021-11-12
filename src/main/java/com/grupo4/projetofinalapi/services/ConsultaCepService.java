@@ -1,10 +1,9 @@
 package com.grupo4.projetofinalapi.services;
 
+import com.grupo4.projetofinalapi.dto.EnderecoDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import com.grupo4.projetofinalapi.dto.EnderecoDTO;
 
 @Service
 public class ConsultaCepService {
@@ -21,7 +20,5 @@ public class ConsultaCepService {
         .block();
         
         return endereco;
-        
     }
-
 }

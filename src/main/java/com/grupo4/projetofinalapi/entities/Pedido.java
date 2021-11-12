@@ -1,17 +1,14 @@
 package com.grupo4.projetofinalapi.entities;
 
+import com.grupo4.projetofinalapi.enums.StatusPedido;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.grupo4.projetofinalapi.enums.StatusPedido;
 
 /*
  * Precisamos fazer o metodo post, put:
@@ -33,8 +30,7 @@ public class Pedido {
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	@Column (name = "cod_pedido", nullable = false, columnDefinition = "serial")
 	private Long id;
-	
-	
+
 	@NotNull
 	@PastOrPresent
 	@DateTimeFormat (pattern = "dd/MM/yyyy")
@@ -60,8 +56,17 @@ public class Pedido {
 	@OneToMany (mappedBy = "pedido")
 	private List<ItemPedido> listaItemPedido;
 
-	public Pedido(Long id, @NotNull @PastOrPresent LocalDateTime dataPedido, @NotNull Double fretePedido,
-			StatusPedido statusPedido, Usuario comprador, Usuario vendedor, List<ItemPedido> listaItemPedido) {
+
+	public Pedido() {
+	}
+
+	public Pedido(Long id,
+				  LocalDateTime dataPedido,
+				  Double fretePedido,
+				  StatusPedido statusPedido,
+				  Usuario comprador,
+				  Usuario vendedor,
+				  List<ItemPedido> listaItemPedido) {
 		this.id = id;
 		this.dataPedido = dataPedido;
 		this.fretePedido = fretePedido;
@@ -69,9 +74,6 @@ public class Pedido {
 		this.comprador = comprador;
 		this.vendedor = vendedor;
 		this.listaItemPedido = listaItemPedido;
-	}
-
-	public Pedido() {
 	}
 
 	public Long getId() {
@@ -149,8 +151,4 @@ public class Pedido {
 				&& Objects.equals(listaItemPedido, other.listaItemPedido) && statusPedido == other.statusPedido
 				&& Objects.equals(vendedor, other.vendedor);
 	}
-	
-
-	
-	
 }

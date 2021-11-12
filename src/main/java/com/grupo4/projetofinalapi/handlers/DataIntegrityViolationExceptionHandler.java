@@ -1,16 +1,14 @@
 package com.grupo4.projetofinalapi.handlers;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.grupo4.projetofinalapi.entities.ErroRespostaBody;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.grupo4.projetofinalapi.entities.ErroRespostaBody;
-
+import java.util.ArrayList;
+import java.util.List;
 
 @ControllerAdvice
 public class DataIntegrityViolationExceptionHandler {
@@ -26,6 +24,4 @@ public class DataIntegrityViolationExceptionHandler {
 		
 		return ResponseEntity.badRequest().body(erroBody);
 	}
-	
-
 }
