@@ -2,6 +2,10 @@ package com.grupo4.projetofinalapi.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import com.grupo4.projetofinalapi.groups.GruposValidacao;
+
 import java.util.Objects;
 
 /*
@@ -19,11 +23,11 @@ public class Categoria {
 	@Column (name = "cod_categoria", nullable = false, columnDefinition = "serial")
 	private Long id;
 	
-	@NotBlank
+	@NotBlank(message = "Nome não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@Column (nullable = false)
 	private String nome;
 	
-	@NotBlank
+	@NotBlank(message = "Descrição não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@Column (nullable = false)
 	private String descricao;
 
@@ -78,9 +82,4 @@ public class Categoria {
 				&& Objects.equals(nome, other.nome);
 	}
 
-	
-	
-	
-	
-	
 }
