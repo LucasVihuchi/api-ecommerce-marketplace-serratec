@@ -19,7 +19,7 @@ public class PedidoController {
 	private PedidoService pedidoService;
 	
 	@PostMapping
-	public ResponseEntity<Pedido> realizarPedido(@Validated(GruposValidacao.ValidadorPost.class) @RequestBody PedidoDTO pedidoDTO){
+	public ResponseEntity<PedidoDTO> realizarPedido(@Validated(GruposValidacao.ValidadorPost.class) @RequestBody PedidoDTO pedidoDTO){
 		Pedido pedido = pedidoDTO.converterParaPedido();
 		
 		URI uri = ServletUriComponentsBuilder
@@ -27,8 +27,9 @@ public class PedidoController {
 				.path("/api/v1/usuarios/{id}/compras")
 				.buildAndExpand(pedido.getId())
 				.toUri();
-		
-		return ResponseEntity.created(uri).body(pedidoService.inserirPedido(pedido));
+
+		pedido = pedidoService.inserirPedido(pedido);
+		return ResponseEntity.created(uri).body(new PedidoDTO(pedido));
 	}
 
 	@PutMapping("{id}")

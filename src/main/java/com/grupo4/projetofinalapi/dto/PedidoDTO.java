@@ -38,12 +38,18 @@ public class PedidoDTO {
 	private UsuarioDTO vendedor;
 	
 	@NotNull(message = "Lista de produtos não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
-	private List<ItemPedido> listaItemPedido;
+	private List<ItemPedidoDTO> listaItemPedido;
 
 	public PedidoDTO() {
 	}
 
-	public PedidoDTO(Long id, LocalDateTime dataPedido, Double fretePedido, StatusPedido statusPedido, UsuarioDTO comprador, UsuarioDTO vendedor, List<ItemPedido> listaItemPedido) {
+	public PedidoDTO(Long id,
+					 LocalDateTime dataPedido,
+					 Double fretePedido,
+					 StatusPedido statusPedido,
+					 UsuarioDTO comprador,
+					 UsuarioDTO vendedor,
+					 List<ItemPedidoDTO> listaItemPedido) {
 		this.id = id;
 		this.dataPedido = dataPedido;
 		this.fretePedido = fretePedido;
@@ -60,7 +66,7 @@ public class PedidoDTO {
 		this.statusPedido = pedido.getStatusPedido();
 		this.comprador = new UsuarioDTO(pedido.getComprador());
 		this.vendedor = new UsuarioDTO(pedido.getVendedor());
-		this.listaItemPedido = pedido.getListaItemPedido();
+		this.listaItemPedido = ItemPedidoDTO.converterParaListaItemPedidoDTO(pedido.getListaItemPedido());
 	}
 	
 	public Long getId() {
@@ -111,11 +117,11 @@ public class PedidoDTO {
 		this.vendedor = vendedor;
 	}
 
-	public List<ItemPedido> getListaItemPedido() {
+	public List<ItemPedidoDTO> getListaItemPedido() {
 		return listaItemPedido;
 	}
 
-	public void setListaItemPedido(List<ItemPedido> listaItemPedido) {
+	public void setListaItemPedido(List<ItemPedidoDTO> listaItemPedido) {
 		this.listaItemPedido = listaItemPedido;
 	}
 
@@ -153,11 +159,17 @@ public class PedidoDTO {
 		pedido.setDataPedido(this.getDataPedido());
 		pedido.setFretePedido(this.getFretePedido());
 		pedido.setStatusPedido(this.getStatusPedido());
-	
-		pedido.setComprador(this.getComprador().converterParaUsuario());
-		pedido.setVendedor(this.getVendedor().converterParaUsuario());
-		pedido.setListaItemPedido(this.getListaItemPedido());
-	
+
+		if(this.getComprador() != null) {
+			pedido.setComprador(this.getComprador().converterParaUsuario());
+		}
+		if(this.getVendedor() != null) {
+			pedido.setVendedor(this.getVendedor().converterParaUsuario());
+		}
+		if(this.listaItemPedido != null) {
+			pedido.setListaItemPedido(ItemPedidoDTO.converterParaListaItemPedido(this.getListaItemPedido()));
+		}
+
 		return pedido;
 	}
 

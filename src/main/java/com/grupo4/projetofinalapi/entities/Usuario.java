@@ -129,7 +129,8 @@ public class Usuario {
 		this.listaPedidosRecebidos = listaPedidosRecebidos;
 	}
 
-	public Usuario(String nome,
+	public Usuario(Long id,
+				   String nome,
 				   String sobrenome,
 				   Sexo sexo,
 				   String telefonePrincipal,
@@ -141,6 +142,7 @@ public class Usuario {
 				   LocalDate dataNascimento,
 				   boolean ehVendedor,
 				   Endereco endereco) {
+		this.id = id;
 		this.nome = nome;
 		this.sobrenome = sobrenome;
 		this.sexo = sexo;

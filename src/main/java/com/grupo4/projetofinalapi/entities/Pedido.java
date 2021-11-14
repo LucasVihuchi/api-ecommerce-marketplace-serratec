@@ -54,7 +54,7 @@ public class Pedido {
 	@JoinColumn (name = "cod_vendedor", nullable = false, columnDefinition = "int4")
 	private Usuario vendedor;
 	
-	@OneToMany (mappedBy = "pedido")
+	@OneToMany (mappedBy = "pedido", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<ItemPedido> listaItemPedido;
 
 

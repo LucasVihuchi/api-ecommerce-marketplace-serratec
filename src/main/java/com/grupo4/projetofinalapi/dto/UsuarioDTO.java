@@ -206,7 +206,9 @@ public class UsuarioDTO {
 	}
 
 	public Usuario converterParaUsuario() {
-		return new Usuario(this.nome,
+		return new Usuario(
+				this.id,
+				this.nome,
 				this.sobrenome,
 				this.sexo, 
 				this.telefonePrincipal,

@@ -1,12 +1,14 @@
 package com.grupo4.projetofinalapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.grupo4.projetofinalapi.components.SpringContext;
 import com.grupo4.projetofinalapi.entities.Categoria;
 import com.grupo4.projetofinalapi.entities.Produto;
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
 import com.grupo4.projetofinalapi.services.FotoProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.persistence.Transient;
@@ -52,9 +54,9 @@ public class ProdutoDTO {
 
     private String urlFoto;
 
-    @Transient
-    @Autowired
-    private FotoProdutoService fotoProdutoService;
+//    @Transient
+//    @Autowired
+//    private FotoProdutoService fotoProdutoService;
 
     public ProdutoDTO() {
     }
@@ -100,6 +102,7 @@ public class ProdutoDTO {
     }
 
     public Produto converterParaProduto() {
+        FotoProdutoService fotoProdutoService = SpringContext.getBean(FotoProdutoService.class);
         Produto produto = new Produto();
         produto.setId(this.id);
         produto.setNome(this.nome);
@@ -107,9 +110,13 @@ public class ProdutoDTO {
         produto.setQtdEstoque(this.qtdEstoque);
         produto.setDataFabricacao(this.dataFabricacao);
         produto.setTempoGarantia(this.tempoGarantia);
-        produto.setVendedor(vendedor.converterParaUsuario());
+        if(produto.getVendedor() != null) {
+            produto.setVendedor(vendedor.converterParaUsuario());
+        }
         produto.setCategoria(this.categoria);
-        produto.setFoto(fotoProdutoService.obterFotoPorProdutoId(this.id));
+        if(this.id != null) {
+            produto.setFoto(fotoProdutoService.obterFotoPorProdutoId(this.id));
+        }
 
         return produto;
     }

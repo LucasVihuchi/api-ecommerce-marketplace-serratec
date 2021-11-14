@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,22 +34,35 @@ public class PedidoService {
 	private MailConfig mailConfig;
 
 	public Pedido inserirPedido(Pedido pedido) {
+		if(pedido.getComprador().getId() == null) {
+			throw new IdNaoFornecidoException("Id do comprador não foi fornecido");
+		}
+		if(pedido.getVendedor().getId() == null) {
+			throw new IdNaoFornecidoException("Id do vendedor não foi fornecido");
+		}
 		Usuario comprador = usuarioRepository.findById(pedido.getComprador().getId())
 				.orElseThrow(() -> new UsuarioInexistenteException("Comprador associado ao id " + pedido.getComprador().getId() + " não existe"));
-	
+
+		pedido.setComprador(comprador);
+
+
 		Usuario vendedor = usuarioRepository.findById(pedido.getVendedor().getId())
 				.orElseThrow(() -> new UsuarioInexistenteException("Vendedor associado ao id " + pedido.getVendedor().getId() + " não existe"));
+
+		pedido.setVendedor(vendedor);
 
 		if(pedido.getListaItemPedido().size() == 0) {
 			throw new PedidoInconsistenteException("Pedido deve conter produtos");
 		}
 		
 		verificaListaItemPedido(vendedor, pedido.getListaItemPedido());
+
+		pedido.setListaItemPedido(insereIdPedidoListaItemPedidos(pedidoRepository.getNextValMySequence(), pedido));
 		pedido.setListaItemPedido(atualizaPrecosItemPedido(pedido.getListaItemPedido()));
 		
 		pedido.setStatusPedido(StatusPedido.NAO_FINALIZADO);
 		pedido.setDataPedido(LocalDateTime.now());
-		
+
 		return pedidoRepository.saveAndFlush(pedido);
 		
 	}
@@ -57,15 +71,20 @@ public class PedidoService {
 	public Pedido atualizarPedido(Long id, Pedido pedido) {
 		Pedido pedidoBD = pedidoRepository.findById(id)
 				.orElseThrow(() -> new PedidoInexistenteException("Pedido associado ao id " + id + " não existe"));
-		
+
+		if(pedidoBD.getStatusPedido() == StatusPedido.FINALIZADO) {
+			throw new PedidoJaFinalizadoException("Pedido já finalizado");
+		}
+
 		if(pedido.getFretePedido() != null) {
 			pedidoBD.setFretePedido(pedido.getFretePedido());
 		}
-		if(pedido.getListaItemPedido().size() != 0) {
+		if(pedido.getListaItemPedido() != null && pedido.getListaItemPedido().size() != 0) {
 			verificaListaItemPedido(pedidoBD.getVendedor(), pedido.getListaItemPedido());
-			pedidoBD.setListaItemPedido(atualizaPrecosItemPedido(pedido.getListaItemPedido()));
+			pedido.setListaItemPedido(insereIdPedidoListaItemPedidos(pedidoBD.getId(), pedido));
+			pedido.setListaItemPedido(atualizaPrecosItemPedido(pedido.getListaItemPedido()));
 		}
-				
+		// Resolver Put
 		return pedidoBD;
 	}
 	
@@ -91,6 +110,12 @@ public class PedidoService {
 
 	public void verificaListaItemPedido(Usuario vendedor, List<ItemPedido> listaItemPedido) {
 		for(ItemPedido itemPedidoAtual : listaItemPedido) {
+			if(itemPedidoAtual.getProduto().getId() == null) {
+				throw new IdNaoFornecidoException("Id do produto não foi fornecido");
+			}
+			if(itemPedidoAtual.getQuantidade() <= 0) {
+				throw new PedidoInconsistenteException("Quantidade de produtos inválida");
+			}
 			Produto produto = produtoRepository.findById(itemPedidoAtual.getProduto().getId())
 				.orElseThrow(() -> new ProdutoInexistenteException("Produto associado ao id " + itemPedidoAtual.getProduto().getId() + " não existe"));
 			if(!produto.getVendedor().getId().equals(vendedor.getId())) {
@@ -110,6 +135,7 @@ public class PedidoService {
 					.orElseThrow(() -> new ProdutoInexistenteException("Produto associado ao id " + id + " não existe"));
 			listaItemPedido.get(indice).setPrecoUnitario(produto.getPrecoUnitario());
 			listaItemPedido.set(indice, listaItemPedido.get(indice));
+			listaItemPedido.get(indice).setProduto(produto);
 		}
 		return listaItemPedido;
 	}
@@ -124,5 +150,13 @@ public class PedidoService {
 			}
 			produto.setQtdEstoque(produto.getQtdEstoque() - itemPedidoAtual.getQuantidade());
 		}
+	}
+
+	public List<ItemPedido> insereIdPedidoListaItemPedidos(Long id, Pedido pedido){
+		for (ItemPedido itemPedidoAtual : pedido.getListaItemPedido()) {
+			itemPedidoAtual.setPedido(pedido);
+			itemPedidoAtual.getPedido().setId(id);
+		}
+		return pedido.getListaItemPedido();
 	}
 }

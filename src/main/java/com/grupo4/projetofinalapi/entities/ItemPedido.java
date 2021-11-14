@@ -1,5 +1,6 @@
 package com.grupo4.projetofinalapi.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
 import com.grupo4.projetofinalapi.groups.GruposValidacao.ValidadorPost;
 import com.grupo4.projetofinalapi.groups.GruposValidacao.ValidadorPut;
@@ -34,10 +35,11 @@ public class ItemPedido {
 	@NotNull(message = "Produto não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinColumn (name = "cod_produto", nullable = false, columnDefinition = "int4")
+	@JsonIgnoreProperties({"vendedor"})
 	private Produto produto;
 		
-	@NotNull(message = "Pedido não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
-	@ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//	@NotNull(message = "Pedido não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn (name = "cod_pedido", nullable = false, columnDefinition = "int4")
 	private Pedido pedido;
 
@@ -45,14 +47,7 @@ public class ItemPedido {
 		super();
 	}
 
-	public ItemPedido(Long id,
-			@NotNull(message = "Quantidade não pode ser nula", groups = ValidadorPost.class) @Positive(message = "Quantidade não pode ser negativa ou zero", groups = {
-					ValidadorPost.class, ValidadorPut.class }) int quantidade,
-			@NotBlank(message = "Preço não pode ficar em branco ou nulo", groups = ValidadorPost.class) @Positive(message = "Preço não pode ser negativo ou zero", groups = {
-					ValidadorPost.class, ValidadorPut.class }) Double precoUnitario,
-			@NotNull(message = "Produto não pode ser nulo", groups = ValidadorPost.class) Produto produto,
-			@NotNull(message = "Pedido não pode ser nulo", groups = ValidadorPost.class) Pedido pedido) {
-		super();
+	public ItemPedido(Long id, int quantidade, Double precoUnitario, Produto produto, Pedido pedido) {
 		this.id = id;
 		this.quantidade = quantidade;
 		this.precoUnitario = precoUnitario;
