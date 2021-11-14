@@ -4,9 +4,9 @@ import com.grupo4.projetofinalapi.entities.Produto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Long>{
-	Optional<Produto> findProdutoByNomeIgnoreCase(String nome);
+	List<Produto> findAllByNomeIgnoreCase(String nome);
 }

@@ -10,6 +10,7 @@ import com.grupo4.projetofinalapi.exceptions.UsuarioInexistenteException;
 import com.grupo4.projetofinalapi.repositories.EnderecoRepository;
 import com.grupo4.projetofinalapi.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class UsuarioService {
 	
 	
 	public Usuario inserirUsuario(Usuario usuarioRecebido){
-		usuarioRecebido.setEndereco(verificaEndereco(usuarioRecebido.getEndereco()));
+		usuarioRecebido.setEndereco(completaEndereco(usuarioRecebido.getEndereco()));
 		return usuarioRepository.saveAndFlush(usuarioRecebido);
 	}
 	
@@ -71,19 +72,20 @@ public class UsuarioService {
 			usuarioBD.setDataNascimento(usuario.getDataNascimento());
 		}
 		if (usuario.getEndereco().getCep() != null)  {
-			usuarioBD.setEndereco(verificaEndereco(usuario.getEndereco()));
+			usuarioBD.setEndereco(completaEndereco(usuario.getEndereco()));
 		}
 		return usuarioBD;
 	}
 
-	public Endereco verificaEndereco(Endereco endereco) {
-		if(endereco.getCep().length() != 8) {
+	public Endereco completaEndereco(Endereco endereco) {
+		ResponseEntity<EnderecoDTO> enderecoValidado = consulta.getEndereco(endereco.getCep());
+		if(!enderecoValidado.getStatusCode().equals(HttpStatus.OK) || enderecoValidado.getBody().isErro()) {
 			throw new EnderecoInvalidoException("CEP '" + endereco.getCep() + "' é inválido");
 		}
-		ResponseEntity<EnderecoDTO> enderecoValidado = consulta.getEndereco(endereco.getCep());
-		if((enderecoValidado.getBody() == null) || (!Endereco.enderecoEhValido(endereco, enderecoValidado.getBody()))) {
-			throw new EnderecoInvalidoException("Dados de endereço inválidos");
-		}
+		endereco.preencherDadosViaCep(enderecoValidado.getBody());
+//		if((enderecoValidado.getBody() == null) || (!Endereco.enderecoEhValido(endereco, enderecoValidado.getBody()))) {
+//			throw new EnderecoInvalidoException("Dados de endereço inválidos");
+//		}
 		return endereco;
 	}
 

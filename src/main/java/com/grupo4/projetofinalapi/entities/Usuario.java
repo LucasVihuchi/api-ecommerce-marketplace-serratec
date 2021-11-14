@@ -45,7 +45,6 @@ public class Usuario {
 	@Column (nullable = false, length = 13)
 	private String telefonePrincipal;
 
-	@NotBlank
 	@Column (length = 13)
 	private String telefoneSecundario;
 	
@@ -78,7 +77,7 @@ public class Usuario {
 	@Column (nullable = false)
 	private boolean ehVendedor;
 	
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn (name = "cod_endereco", nullable = false, unique = true, columnDefinition = "int4")
 	private Endereco endereco;
 	

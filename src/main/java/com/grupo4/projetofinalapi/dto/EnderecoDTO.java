@@ -14,13 +14,21 @@ public class EnderecoDTO {
 	private String gia;
 	private String ddd;
 	private String siafi;
+	private boolean erro;
 	
 	public EnderecoDTO(){
 	}
 
-	public EnderecoDTO(String cep, String logradouro, String complemento, String bairro, String localidade, String uf,
-			String ibge, String gia, String ddd, String siafi) {
-		super();
+	public EnderecoDTO(String cep,
+					   String logradouro,
+					   String complemento,
+					   String bairro,
+					   String localidade,
+					   String uf, String ibge,
+					   String gia,
+					   String ddd,
+					   String siafi,
+					   boolean erro) {
 		this.cep = cep;
 		this.logradouro = logradouro;
 		this.complemento = complemento;
@@ -31,6 +39,7 @@ public class EnderecoDTO {
 		this.gia = gia;
 		this.ddd = ddd;
 		this.siafi = siafi;
+		this.erro = erro;
 	}
 
 	public String getCep() {
@@ -113,6 +122,14 @@ public class EnderecoDTO {
 		this.siafi = siafi;
 	}
 
+	public boolean isErro() {
+		return erro;
+	}
+
+	public void setErro(boolean erro) {
+		this.erro = erro;
+	}
+
 	@Override
 	public String toString() {
 		return "EnderecoDTO [cep=" + cep + ", logradouro=" + logradouro + ", complemento=" + complemento + ", bairro="
@@ -121,23 +138,15 @@ public class EnderecoDTO {
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(bairro, cep, complemento, ddd, gia, ibge, localidade, logradouro, siafi, uf);
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		EnderecoDTO that = (EnderecoDTO) o;
+		return erro == that.erro && Objects.equals(cep, that.cep) && Objects.equals(logradouro, that.logradouro) && Objects.equals(complemento, that.complemento) && Objects.equals(bairro, that.bairro) && Objects.equals(localidade, that.localidade) && Objects.equals(uf, that.uf) && Objects.equals(ibge, that.ibge) && Objects.equals(gia, that.gia) && Objects.equals(ddd, that.ddd) && Objects.equals(siafi, that.siafi);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EnderecoDTO other = (EnderecoDTO) obj;
-		return Objects.equals(bairro, other.bairro) && Objects.equals(cep, other.cep)
-				&& Objects.equals(complemento, other.complemento) && Objects.equals(ddd, other.ddd)
-				&& Objects.equals(gia, other.gia) && Objects.equals(ibge, other.ibge)
-				&& Objects.equals(localidade, other.localidade) && Objects.equals(logradouro, other.logradouro)
-				&& Objects.equals(siafi, other.siafi) && Objects.equals(uf, other.uf);
-	}	
+	public int hashCode() {
+		return Objects.hash(cep, logradouro, complemento, bairro, localidade, uf, ibge, gia, ddd, siafi, erro);
+	}
 }

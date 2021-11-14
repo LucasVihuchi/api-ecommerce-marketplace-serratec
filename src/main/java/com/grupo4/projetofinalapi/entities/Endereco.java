@@ -69,13 +69,19 @@ public class Endereco {
 		this.estado = estado;
 	}
 
-	public static boolean enderecoEhValido(Endereco endereco, EnderecoDTO enderecoDTO) {
-		boolean logradouroValido = endereco.getLogradouro().equals(enderecoDTO.getLogradouro());
-		boolean bairroValido = endereco.getBairro().equals(enderecoDTO.getBairro());
-		boolean cidadeValida = endereco.getCidade().equals(enderecoDTO.getLocalidade());
-
-		return logradouroValido && bairroValido && cidadeValida;
+	public void preencherDadosViaCep(EnderecoDTO enderecoDTO) {
+		this.setBairro(enderecoDTO.getBairro());
+		this.setCidade(enderecoDTO.getLocalidade());
+		this.setEstado(enderecoDTO.getUf());
 	}
+
+//	public static boolean enderecoEhValido(Endereco endereco, EnderecoDTO enderecoDTO) {
+//		boolean estadoValido = endereco.getEstado().equals(enderecoDTO.getUf());
+//		boolean bairroValido = endereco.getBairro().equals(enderecoDTO.getBairro());
+//		boolean cidadeValida = endereco.getCidade().equals(enderecoDTO.getLocalidade());
+//
+//		return estadoValido && bairroValido && cidadeValida;
+//	}
 
 	public Long getId() {
 		return id;

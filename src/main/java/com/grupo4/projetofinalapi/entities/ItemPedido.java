@@ -1,15 +1,14 @@
 package com.grupo4.projetofinalapi.entities;
 
-import java.util.Objects;
+import com.grupo4.projetofinalapi.groups.GruposValidacao;
+import com.grupo4.projetofinalapi.groups.GruposValidacao.ValidadorPost;
+import com.grupo4.projetofinalapi.groups.GruposValidacao.ValidadorPut;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-
-import com.grupo4.projetofinalapi.groups.GruposValidacao;
-import com.grupo4.projetofinalapi.groups.GruposValidacao.ValidadorPost;
-import com.grupo4.projetofinalapi.groups.GruposValidacao.ValidadorPut;
+import java.util.Objects;
 
 @Entity
 @Table (uniqueConstraints = {

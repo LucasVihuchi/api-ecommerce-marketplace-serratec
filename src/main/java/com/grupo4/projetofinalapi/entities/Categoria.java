@@ -1,11 +1,9 @@
 package com.grupo4.projetofinalapi.entities;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 /*

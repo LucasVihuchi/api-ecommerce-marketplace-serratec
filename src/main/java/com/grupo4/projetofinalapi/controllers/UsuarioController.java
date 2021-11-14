@@ -2,7 +2,6 @@ package com.grupo4.projetofinalapi.controllers;
 
 import com.grupo4.projetofinalapi.dto.PedidoDTO;
 import com.grupo4.projetofinalapi.dto.UsuarioDTO;
-import com.grupo4.projetofinalapi.entities.Pedido;
 import com.grupo4.projetofinalapi.entities.Usuario;
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
 import com.grupo4.projetofinalapi.services.PedidoService;
@@ -13,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -58,24 +56,14 @@ public class UsuarioController {
 	}
 
 	@GetMapping("{id}/compras")
-	public ResponseEntity<List<PedidoDTO>> obterListaPedidosPorComprador(Long id){
+	public ResponseEntity<List<PedidoDTO>> obterListaPedidosPorComprador(@PathVariable Long id){
 		List<PedidoDTO> listaPedidosDTO = PedidoDTO.converterParaPedidosDTO(usuarioService.obterListaPedidosPorComprador(id));
 		return ResponseEntity.ok().body(listaPedidosDTO);
 	}
 
 	@GetMapping("{id}/vendas")
-	public ResponseEntity<List<PedidoDTO>> obterListaPedidosPorVendedor(Long id){
+	public ResponseEntity<List<PedidoDTO>> obterListaPedidosPorVendedor(@PathVariable Long id){
 		List<PedidoDTO> listaPedidosDTO = PedidoDTO.converterParaPedidosDTO(usuarioService.obterListaPedidosPorVendedor(id));
 		return ResponseEntity.ok().body(listaPedidosDTO);
 	}
-	
-	@PutMapping("{id}/compras")
-	public ResponseEntity<PedidoDTO> atualizarPedido(@PathVariable Long id, 
-			@Validated(GruposValidacao.ValidadorPut.class) @RequestBody PedidoDTO pedidoDTO) {	
-	
-		Pedido pedido = pedidoDTO.converterParaPedido();
-		pedido = pedidoService.atualizarPedido(id, pedido);
-		return ResponseEntity.ok().body(new PedidoDTO(pedido));
-	}
-	
 }

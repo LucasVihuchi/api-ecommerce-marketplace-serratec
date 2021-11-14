@@ -1,5 +1,6 @@
 package com.grupo4.projetofinalapi.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.grupo4.projetofinalapi.entities.Endereco;
 import com.grupo4.projetofinalapi.entities.Usuario;
 import com.grupo4.projetofinalapi.enums.Sexo;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
+@JsonIgnoreProperties(value = {"ehVendedor"}, allowGetters = true)
 public class UsuarioDTO {
 
 	private Long id;
@@ -52,9 +54,9 @@ public class UsuarioDTO {
 	//@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private LocalDate dataNascimento;
 
-	
 	private boolean ehVendedor;
 
+	@JsonIgnoreProperties(value = {"estado", "cidade", "bairro"}, allowGetters = true)
 	@NotNull(message = "Endereço não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
 	private Endereco endereco;
 

@@ -4,17 +4,13 @@ import com.grupo4.projetofinalapi.dto.PedidoDTO;
 import com.grupo4.projetofinalapi.entities.Pedido;
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
 import com.grupo4.projetofinalapi.services.PedidoService;
-
-import java.net.URI;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("api/v1/pedidos")
@@ -33,6 +29,20 @@ public class PedidoController {
 				.toUri();
 		
 		return ResponseEntity.created(uri).body(pedidoService.inserirPedido(pedido));
-		
+	}
+
+	@PutMapping("{id}")
+	public ResponseEntity<PedidoDTO> atualizarPedido(@PathVariable Long id,
+													 @Validated(GruposValidacao.ValidadorPut.class) @RequestBody PedidoDTO pedidoDTO) {
+
+		Pedido pedido = pedidoDTO.converterParaPedido();
+		pedido = pedidoService.atualizarPedido(id, pedido);
+		return ResponseEntity.ok().body(new PedidoDTO(pedido));
+	}
+
+	@PutMapping("{id}/finalizar")
+	public ResponseEntity<PedidoDTO> finalizarPedido(@PathVariable Long id) {
+		Pedido pedido = pedidoService.finalizarPedido(id);
+		return ResponseEntity.ok().body(new PedidoDTO(pedido));
 	}
 }

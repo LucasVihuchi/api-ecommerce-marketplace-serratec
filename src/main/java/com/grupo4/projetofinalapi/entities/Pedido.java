@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
@@ -150,5 +151,38 @@ public class Pedido {
 				&& Objects.equals(fretePedido, other.fretePedido) && Objects.equals(id, other.id)
 				&& Objects.equals(listaItemPedido, other.listaItemPedido) && statusPedido == other.statusPedido
 				&& Objects.equals(vendedor, other.vendedor);
+	}
+
+	public String gerarTemplateEmail() {
+		DateTimeFormatter formatoBrasileiro = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+		String conteudo =
+				"<h2>Pedido Nº " + this.getId() + "</h2>" +
+				"<p>Data de finalização do pedido: " + formatoBrasileiro.format(dataPedido) + "</p>" +
+				"<p>Data de envio: " + formatoBrasileiro.format(dataPedido.plusDays(2)) + "</p>" +
+				"<p>Data de entrega: " + formatoBrasileiro.format(dataPedido.plusWeeks(2)) + "</p>";
+
+		double totalPedido = 0;
+		String tabelaProdutos =
+				"<table>" +
+				"<tr>" +
+				"<th>Quantidade</th>" +
+				"<th>Produto</th>" +
+				"<th>Preço Unitário" +
+				"<th>Subtotal" +
+				"</tr>";
+		for(ItemPedido itemPedidoAtual : this.listaItemPedido) {
+			tabelaProdutos = tabelaProdutos.concat(
+					"<tr>" +
+					"<td>" + itemPedidoAtual.getQuantidade() + "</td>" +
+					"<td>" + itemPedidoAtual.getProduto().getNome() + "</td>" +
+					"<td>R$ " + String.format("%.2f", itemPedidoAtual.getPrecoUnitario()) + "</td>" +
+					"<td>R$ " + String.format("%.2f", itemPedidoAtual.getQuantidade() * itemPedidoAtual.getPrecoUnitario()) + "</td>" +
+					"</tr>");
+			totalPedido += itemPedidoAtual.getQuantidade() * itemPedidoAtual.getPrecoUnitario();
+		}
+		tabelaProdutos = tabelaProdutos.concat("</table>");
+		conteudo = conteudo.concat(tabelaProdutos);
+
+		return conteudo.concat("<h4>Preço total do pedido: R$ " + String.format("%.2f", totalPedido) + "</h4>");
 	}
 }

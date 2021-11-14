@@ -9,6 +9,10 @@ public class DataNascimentoValidator implements ConstraintValidator<ValidDataNas
 
 	@Override
 	public boolean isValid(LocalDate dataRecebida, ConstraintValidatorContext context) {
+		if(dataRecebida == null) {
+			return true;
+		}
+
 		LocalDate hoje = LocalDate.now();
 		
 		Period diferencaEntreDatas = Period.between(dataRecebida, hoje);

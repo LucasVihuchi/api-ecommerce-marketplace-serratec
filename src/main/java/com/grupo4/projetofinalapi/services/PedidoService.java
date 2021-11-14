@@ -1,25 +1,21 @@
 package com.grupo4.projetofinalapi.services;
 
+import com.grupo4.projetofinalapi.config.MailConfig;
 import com.grupo4.projetofinalapi.entities.ItemPedido;
 import com.grupo4.projetofinalapi.entities.Pedido;
 import com.grupo4.projetofinalapi.entities.Produto;
 import com.grupo4.projetofinalapi.entities.Usuario;
 import com.grupo4.projetofinalapi.enums.StatusPedido;
-import com.grupo4.projetofinalapi.exceptions.PedidoInconsistenteException;
-import com.grupo4.projetofinalapi.exceptions.PedidoInexistenteException;
-import com.grupo4.projetofinalapi.exceptions.ProdutoInexistenteException;
-import com.grupo4.projetofinalapi.exceptions.UsuarioInexistenteException;
+import com.grupo4.projetofinalapi.exceptions.*;
 import com.grupo4.projetofinalapi.repositories.PedidoRepository;
 import com.grupo4.projetofinalapi.repositories.ProdutoRepository;
 import com.grupo4.projetofinalapi.repositories.UsuarioRepository;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class PedidoService {
@@ -32,21 +28,10 @@ public class PedidoService {
 	
 	@Autowired
 	private ProdutoRepository produtoRepository;
-	
-//	public List<Pedido> obterListaPedidosPorComprador(Long id){
-//		Usuario usuarioBD = usuarioRepository.findById(id)
-//				.orElseThrow(() -> new UsuarioInexistenteException("Usuario não existe"));
-//		return usuarioBD.getListaPedidosFeitos();
-//	}
-//
-//	public List<Pedido> obterListaPedidosPorVendedor(Long id){
-//		Usuario usuarioBD = usuarioRepository.findById(id)
-//				.orElseThrow(() -> new UsuarioInexistenteException("Usuario não existe"));
-//		return usuarioBD.getListaPedidosRecebidos();
-//	}
 
-	// TODO Remover a classe se não for usada para nada
-	
+	@Autowired
+	private MailConfig mailConfig;
+
 	public Pedido inserirPedido(Pedido pedido) {
 		Usuario comprador = usuarioRepository.findById(pedido.getComprador().getId())
 				.orElseThrow(() -> new UsuarioInexistenteException("Comprador associado ao id " + pedido.getComprador().getId() + " não existe"));
@@ -85,7 +70,25 @@ public class PedidoService {
 	}
 	
 	//TODO lembrar de alterar o estoque quando finalizar pedido e salvar quantidade e preço.
-	
+	@Transactional
+	public Pedido finalizarPedido(Long id) {
+		Pedido pedidoBD = pedidoRepository.findById(id)
+				.orElseThrow(() -> new PedidoInexistenteException("Pedido associado ao id " + id + " não existe"));
+
+		if(pedidoBD.getStatusPedido().equals(StatusPedido.FINALIZADO)) {
+			throw new PedidoJaFinalizadoException("Pedido associado ao id " + id + " já foi finalizado");
+		}
+		atualizaQtdEstoque(pedidoBD.getListaItemPedido());
+		pedidoBD.setStatusPedido(StatusPedido.FINALIZADO);
+
+		String assunto = "Marketplace Grupo 4 - Pedido " + pedidoBD.getId() + " finalizado";
+		String conteudo = pedidoBD.gerarTemplateEmail();
+		mailConfig.sendMail(pedidoBD.getComprador().getEmail(), assunto, conteudo);
+
+		return pedidoBD;
+	}
+
+
 	public void verificaListaItemPedido(Usuario vendedor, List<ItemPedido> listaItemPedido) {
 		for(ItemPedido itemPedidoAtual : listaItemPedido) {
 			Produto produto = produtoRepository.findById(itemPedidoAtual.getProduto().getId())
@@ -110,5 +113,16 @@ public class PedidoService {
 		}
 		return listaItemPedido;
 	}
-	
+
+	@Transactional
+	public void atualizaQtdEstoque(List<ItemPedido> listaItemPedido) {
+		for (ItemPedido itemPedidoAtual : listaItemPedido) {
+			Produto produto = produtoRepository.findById(itemPedidoAtual.getProduto().getId())
+					.orElseThrow(() -> new ProdutoInexistenteException("Produto associado ao id " + itemPedidoAtual.getProduto().getId() + " não existe"));
+			if (itemPedidoAtual.getQuantidade() > produto.getQtdEstoque()) {
+				throw new PedidoInconsistenteException("Produto associado ao id " + produto.getId() + " não possui estoque suficiente. Tente mais tarde");
+			}
+			produto.setQtdEstoque(produto.getQtdEstoque() - itemPedidoAtual.getQuantidade());
+		}
+	}
 }

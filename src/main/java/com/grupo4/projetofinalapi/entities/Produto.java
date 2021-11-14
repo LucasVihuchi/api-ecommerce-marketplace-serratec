@@ -1,11 +1,7 @@
 package com.grupo4.projetofinalapi.entities;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
-import com.grupo4.projetofinalapi.groups.GruposValidacao.ValidadorPost;
-import com.grupo4.projetofinalapi.groups.GruposValidacao.ValidadorPut;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -58,7 +54,6 @@ public class Produto {
 	@NotNull(message = "Vendedor não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinColumn (name = "cod_vendedor", nullable = false, columnDefinition = "int4")
-	// TODO Verificar se JSONIgnore já resolve a questão dos dados :D
 	private Usuario vendedor;
 	
 	@NotNull(message = "Categoria não pode ser nula", groups = {GruposValidacao.ValidadorPost.class})
@@ -66,23 +61,21 @@ public class Produto {
 	@JoinColumn (name = "cod_categoria", nullable = false, columnDefinition = "int4")
 	private Categoria categoria;
 
+	@OneToOne(mappedBy = "produto", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private FotoProduto foto;
+
 	public Produto() {
 	}
 
 	public Produto(Long id,
-			@NotBlank(message = "Nome não pode ficar em branco ou nulo", groups = ValidadorPost.class) String nome,
-			@NotBlank(message = "Descrição não pode ficar em branco ou nulo", groups = ValidadorPost.class) String descricao,
-			@NotNull(message = "Quantidade em estoque não pode ser nula", groups = ValidadorPost.class) @PositiveOrZero(message = "Quantidade não pode ser negativa ou zero", groups = {
-					ValidadorPost.class, ValidadorPut.class }) int qtdEstoque,
-			@Past(message = "Data deve ser anterior a hoje", groups = { ValidadorPost.class,
-					ValidadorPut.class }) LocalDate dataFabricacao,
-			@NotNull(message = "Tempo de garantia não pode ser nulo", groups = ValidadorPost.class) @PositiveOrZero(message = "Tempo de garantia não pode ser negativo ou zero", groups = {
-					ValidadorPost.class, ValidadorPut.class }) int tempoGarantia,
-			@Positive(message = "Preço unitário não pode ser negativo ou zero", groups = { ValidadorPost.class,
-					ValidadorPut.class }) @DecimalMax(value = "99999.99", message = "Preço unitário não pode ser superior a R$ {value}", groups = {
-							ValidadorPost.class, ValidadorPut.class }) Double precoUnitario,
-			@NotNull(message = "Vendedor não pode ser nulo", groups = ValidadorPost.class) Usuario vendedor,
-			@NotNull(message = "Categoria não pode ser nula", groups = ValidadorPost.class) Categoria categoria) {
+				   String nome,
+				   String descricao,
+				   int qtdEstoque,
+				   LocalDate dataFabricacao,
+				   int tempoGarantia,
+				   Double precoUnitario,
+				   Usuario vendedor,
+				   Categoria categoria) {
 		this.id = id;
 		this.nome = nome;
 		this.descricao = descricao;
@@ -166,6 +159,14 @@ public class Produto {
 		this.categoria = categoria;
 	}
 
+	public FotoProduto getFoto() {
+		return foto;
+	}
+
+	public void setFoto(FotoProduto foto) {
+		this.foto = foto;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(categoria, dataFabricacao, descricao, id, nome, precoUnitario, qtdEstoque, tempoGarantia,
@@ -187,7 +188,5 @@ public class Produto {
 				&& qtdEstoque == other.qtdEstoque && tempoGarantia == other.tempoGarantia
 				&& Objects.equals(vendedor, other.vendedor);
 	}
-	
-	
-	
+
 }
