@@ -16,9 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.List;
@@ -40,7 +38,7 @@ public class ProdutoService {
 	}
 	
 	public List<Produto> obterProdutosPorNome(String nome){
-		return produtoRepository.findAllByNomeIgnoreCase(nome);
+		return produtoRepository.findAllAlikeByNomeIgnoreCase(nome);
 	}
 
 	public Produto inserirProduto(Produto produto, MultipartFile file, UserDetails usuarioAutenticado) throws IOException {
@@ -49,7 +47,7 @@ public class ProdutoService {
 		Usuario vendedor = usuarioRepository.findByNomeUsuario(usuarioAutenticado.getUsername())
 				.orElseThrow(() -> new UsuarioInexistenteException("Usuário associado ao nome de usuário '" + usuarioAutenticado.getUsername() + "' não existe"));
 
-		List<Produto> listaProdutos = produtoRepository.findAllByNomeIgnoreCase(produto.getNome());
+		List<Produto> listaProdutos = produtoRepository.findAllAlikeByNomeIgnoreCase(produto.getNome());
 		for(Produto produtoAtual : listaProdutos) {
 			boolean vendedorIgual = produtoAtual.getVendedor().getId().equals(vendedor.getId());
 			boolean nomeProdutoIgual = produtoAtual.getNome().equalsIgnoreCase(produto.getNome());
@@ -83,19 +81,29 @@ public class ProdutoService {
 		return produtoRepository.saveAndFlush(produto);
 	}
 
-	// TODO Melhorar respostas se der tempo
 	public void validaProdutoPost(Produto produto) {
-		if(
-				produto.getNome() == null ||
-				produto.getDescricao() == null ||
-				produto.getQtdEstoque() <= 0 ||
-				produto.getDataFabricacao() == null ||
-				produto.getDataFabricacao().isAfter(ChronoLocalDate.from(LocalDateTime.now())) ||
-				produto.getTempoGarantia() <= 0 ||
-				produto.getPrecoUnitario() <= 0
-		) {
-			throw new ProdutoInconsistenteException("Produto com campos incorretos");
+		if(produto.getNome() == null || produto.getNome().equals("")) {
+			throw new ProdutoInconsistenteException("Nome não pode ficar em branco ou ser nulo");
 		}
-
+		if(produto.getDescricao() == null || produto.getDescricao().equals("")) {
+			throw new ProdutoInconsistenteException("Descrição não pode ficar em branco ou ser nulo");
+		}
+		if(produto.getQtdEstoque() <= 0) {
+			throw new ProdutoInconsistenteException("Quantidade em estoque deve ser positiva");
+		}
+		if(produto.getDataFabricacao() != null) {
+			if(produto.getDataFabricacao().isAfter(ChronoLocalDate.from(LocalDateTime.now()))) {
+				throw new ProdutoInconsistenteException("Data de fabricação deve ");
+			}
+		}
+		if(produto.getTempoGarantia() <= 0) {
+			throw new ProdutoInconsistenteException("Tempo de garantia deve ser positivo");
+		}
+		if(produto.getPrecoUnitario() <= 0 || produto.getPrecoUnitario() > 99999.99) {
+			throw new ProdutoInconsistenteException("Preço unitário deve ser positivo e menor que R$ 100.000,00");
+		}
+		if(produto.getCategoria() == null) {
+			throw new ProdutoInconsistenteException("Produto deve conter uma categoria");
+		}
 	}
 }

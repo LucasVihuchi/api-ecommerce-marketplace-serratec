@@ -35,7 +35,6 @@ public class ProdutoDTO {
     private int qtdEstoque;
 
     @Past(message = "Data deve ser anterior a hoje", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataFabricacao;
 
     @NotNull(message = "Tempo de garantia não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
@@ -53,10 +52,6 @@ public class ProdutoDTO {
     private Categoria categoria;
 
     private String urlFoto;
-
-//    @Transient
-//    @Autowired
-//    private FotoProdutoService fotoProdutoService;
 
     public ProdutoDTO() {
     }

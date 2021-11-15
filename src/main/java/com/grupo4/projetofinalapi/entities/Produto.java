@@ -38,7 +38,6 @@ public class Produto {
 	
 	@Past(message = "Data deve ser anterior a hoje", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
 	@Column
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private LocalDate dataFabricacao;
 	
 	@NotNull(message = "Tempo de garantia não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})

@@ -6,6 +6,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -34,7 +36,6 @@ public class Pedido {
 
 	@NotNull
 	@PastOrPresent
-	@DateTimeFormat (pattern = "dd/MM/yyyy")
 	@Column (name = "data_pedido", nullable = false)
 	private LocalDateTime dataPedido;
 	
@@ -154,12 +155,16 @@ public class Pedido {
 	}
 
 	public String gerarTemplateEmail() {
-		DateTimeFormatter formatoBrasileiro = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+		DateTimeFormatter formatoDataHoraBrasileiro = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+		DateTimeFormatter formatoDataBraileiro = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDate dataEnvio = dataPedido.toLocalDate().plusDays(2);
+		LocalDate dataEntrega = dataPedido.toLocalDate().plusWeeks(2);
+		System.out.println("\n\n\n -------------jrthrtjrtj----------\n\n\n\n");
 		String conteudo =
 				"<h2>Pedido Nº " + this.getId() + "</h2>" +
-				"<p>Data de finalização do pedido: " + formatoBrasileiro.format(dataPedido) + "</p>" +
-				"<p>Data de envio: " + formatoBrasileiro.format(dataPedido.plusDays(2)) + "</p>" +
-				"<p>Data de entrega: " + formatoBrasileiro.format(dataPedido.plusWeeks(2)) + "</p>";
+				"<p>Data de finalização do pedido: " + formatoDataHoraBrasileiro.format(dataPedido) + "</p>" +
+				"<p>Data de envio: " + formatoDataBraileiro.format(dataEnvio) + "</p>" +
+				"<p>Data de entrega: " + formatoDataBraileiro.format(dataEntrega) + "</p>";
 
 		double totalPedido = 0;
 		String tabelaProdutos =

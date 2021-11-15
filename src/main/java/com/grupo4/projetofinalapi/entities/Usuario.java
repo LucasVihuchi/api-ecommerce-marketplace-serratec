@@ -69,7 +69,6 @@ public class Usuario {
 	@NotNull
 	@ValidDataNascimento
 	@Past
-	@DateTimeFormat (pattern = "dd/MM/yyyy")
 	@Column (nullable = false)
 	private LocalDate dataNascimento;
 	

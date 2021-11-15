@@ -23,7 +23,6 @@ public class PedidoDTO {
 	private Long id;
 
 	@PastOrPresent(message = "Data do pedido deve ser igual ou anterior a hoje", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
-	@DateTimeFormat (pattern = "dd/MM/yyyy")
 	private LocalDateTime dataPedido;
 	
 	@NotNull(message = "Frete não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})

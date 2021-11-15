@@ -35,11 +35,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/*/categorias").authenticated()
                 .antMatchers(HttpMethod.POST, "/api/*/produtos").authenticated()
-                .antMatchers(HttpMethod.DELETE, "/api/*/usuarios/**").authenticated() //TODO Verificar se vai mudar
+                .antMatchers(HttpMethod.DELETE, "/api/*/usuarios/**").authenticated()
                 .antMatchers(HttpMethod.GET, "/api/*/usuarios/**").authenticated()
-                .antMatchers(HttpMethod.PUT, "/api/*/usuarios/**").authenticated() //TODO Verificar se vai mudar
+                .antMatchers(HttpMethod.PUT, "/api/*/usuarios/**").authenticated()
                 .antMatchers("/api/*/pedidos").authenticated()
-                .antMatchers("/api/*/pedidos/**").authenticated() //TODO Verificar se vai mudar
+                .antMatchers("/api/*/pedidos/**").authenticated()
                 .and()
                 .csrf().disable()
                 .formLogin().disable()

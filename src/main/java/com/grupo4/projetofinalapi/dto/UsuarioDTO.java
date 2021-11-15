@@ -1,5 +1,6 @@
 package com.grupo4.projetofinalapi.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.grupo4.projetofinalapi.entities.Endereco;
 import com.grupo4.projetofinalapi.entities.Usuario;
@@ -7,6 +8,7 @@ import com.grupo4.projetofinalapi.enums.Sexo;
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
 import com.grupo4.projetofinalapi.validations.ValidDataNascimento;
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -27,6 +29,8 @@ public class UsuarioDTO {
 
 	@NotBlank(message = "Telefone principal não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@Size(min = 8, max = 13, message = "Telefone deve conter entre {min} e {max} dígitos", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
+	// TODO Tentar usar regex para evitar letras
+	// TODO Evitar bater dados duplicados no banco
 	private String telefonePrincipal;
 
 	@Size(min = 8, max = 13, message = "Telefone deve conter entre {min} e {max} dígitos", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
@@ -49,8 +53,6 @@ public class UsuarioDTO {
 	@NotNull(message = "Data de nascimento não pode ser nula", groups = {GruposValidacao.ValidadorPost.class})
 	@ValidDataNascimento(message = "Usuário deve ser possuir mais de 18 anos ou menos de 120", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
 	@Past(message = "Data de nascimento deve ser anterior a hoje", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
-	// TODO Verificar formatação da data
-	//@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private LocalDate dataNascimento;
 
 	private boolean ehVendedor;

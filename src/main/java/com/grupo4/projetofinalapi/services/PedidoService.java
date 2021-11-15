@@ -97,8 +97,7 @@ public class PedidoService {
 		// Resolver Put
 		return pedidoBD;
 	}
-	
-	//TODO lembrar de alterar o estoque quando finalizar pedido e salvar quantidade e preço.
+
 	@Transactional
 	public Pedido finalizarPedido(Long id, UserDetails usuarioAutenticado) {
 		Pedido pedidoBD = pedidoRepository.findById(id)
