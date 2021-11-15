@@ -65,7 +65,9 @@ public class ItemPedidoDTO {
         itemPedido.setId(this.id);
         itemPedido.setQuantidade(this.quantidade);
         itemPedido.setPrecoUnitario(this.precoUnitario);
-        itemPedido.setProduto(this.produto.converterParaProduto());
+        if(this.produto != null) {
+            itemPedido.setProduto(this.produto.converterParaProduto());
+        }
 //        if(this.pedido != null) {
 //            itemPedido.setPedido(this.pedido.converterParaPedido());
 //        }

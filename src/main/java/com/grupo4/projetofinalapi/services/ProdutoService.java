@@ -6,6 +6,7 @@ import com.grupo4.projetofinalapi.entities.Produto;
 import com.grupo4.projetofinalapi.entities.Usuario;
 import com.grupo4.projetofinalapi.exceptions.CategoriaInexistenteException;
 import com.grupo4.projetofinalapi.exceptions.ProdutoExistenteException;
+import com.grupo4.projetofinalapi.exceptions.ProdutoInconsistenteException;
 import com.grupo4.projetofinalapi.exceptions.UsuarioInexistenteException;
 import com.grupo4.projetofinalapi.repositories.CategoriaRepository;
 import com.grupo4.projetofinalapi.repositories.ProdutoRepository;
@@ -14,7 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 
 @Service
@@ -38,6 +43,8 @@ public class ProdutoService {
 	}
 
 	public Produto inserirProduto(Produto produto, MultipartFile file) throws IOException {
+		validaProdutoPost(produto);
+
 		List<Produto> listaProdutos = produtoRepository.findAllByNomeIgnoreCase(produto.getNome());
 		for(Produto produtoAtual : listaProdutos) {
 			boolean vendedorIgual = produtoAtual.getVendedor().getId().equals(produto.getVendedor().getId());
@@ -54,6 +61,10 @@ public class ProdutoService {
 
 		produto.setFoto(fotoProduto);
 
+		if(produto.getVendedor() == null || produto.getVendedor().getId() == null) {
+			throw new UsuarioInexistenteException("Vendedor deve ser informado");
+		}
+
 		Usuario vendedor = usuarioRepository.findById(produto.getVendedor().getId())
 				.orElseThrow(() -> new UsuarioInexistenteException("Usuário associado ao id " + produto.getId() + " não existe"));
 
@@ -63,6 +74,9 @@ public class ProdutoService {
 		usuarioRepository.saveAndFlush(vendedor);
 		produto.setVendedor(vendedor);
 
+		if(produto.getCategoria() == null || produto.getCategoria().getId() == null) {
+			throw new CategoriaInexistenteException("Categoria deve ser informada");
+		}
 		Categoria categoria = categoriaRepository.findById(produto.getCategoria().getId())
 				.orElseThrow(() -> new CategoriaInexistenteException("Categoria associada ao id " + produto.getId() + " não existe"));
 
@@ -70,5 +84,21 @@ public class ProdutoService {
 
 
 		return produtoRepository.saveAndFlush(produto);
+	}
+
+	// TODO Melhorar respostas se der tempo
+	public void validaProdutoPost(Produto produto) {
+		if(
+				produto.getNome() == null ||
+				produto.getDescricao() == null ||
+				produto.getQtdEstoque() <= 0 ||
+				produto.getDataFabricacao() == null ||
+				produto.getDataFabricacao().isAfter(ChronoLocalDate.from(LocalDateTime.now())) ||
+				produto.getTempoGarantia() <= 0 ||
+				produto.getPrecoUnitario() <= 0
+		) {
+			throw new ProdutoInconsistenteException("Produto com campos incorretos");
+		}
+
 	}
 }

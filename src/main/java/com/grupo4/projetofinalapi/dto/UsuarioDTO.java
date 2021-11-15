@@ -8,10 +8,7 @@ import com.grupo4.projetofinalapi.groups.GruposValidacao;
 import com.grupo4.projetofinalapi.validations.ValidDataNascimento;
 import org.hibernate.validator.constraints.br.CPF;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @JsonIgnoreProperties(value = {"ehVendedor"}, allowGetters = true)
@@ -29,8 +26,10 @@ public class UsuarioDTO {
 	private Sexo sexo;
 
 	@NotBlank(message = "Telefone principal não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
+	@Size(min = 8, max = 13, message = "Telefone deve conter entre {min} e {max} dígitos", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
 	private String telefonePrincipal;
 
+	@Size(min = 8, max = 13, message = "Telefone deve conter entre {min} e {max} dígitos", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
 	private String telefoneSecundario;
 
 	@NotBlank(message = "Nome de usuário não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})

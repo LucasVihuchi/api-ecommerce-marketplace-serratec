@@ -39,7 +39,7 @@ public class ItemPedido {
 	private Produto produto;
 		
 //	@NotNull(message = "Pedido não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn (name = "cod_pedido", nullable = false, columnDefinition = "int4")
 	private Pedido pedido;
 

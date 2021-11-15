@@ -12,6 +12,7 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class PedidoDTO {
 	private LocalDateTime dataPedido;
 	
 	@NotNull(message = "Frete não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
+	@PositiveOrZero(message = "Frete não pode ser negativo", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
 	private Double fretePedido;
 	
 	@Enumerated (EnumType.STRING)

@@ -10,12 +10,13 @@ import com.grupo4.projetofinalapi.exceptions.*;
 import com.grupo4.projetofinalapi.repositories.PedidoRepository;
 import com.grupo4.projetofinalapi.repositories.ProdutoRepository;
 import com.grupo4.projetofinalapi.repositories.UsuarioRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,6 +34,9 @@ public class PedidoService {
 	@Autowired
 	private MailConfig mailConfig;
 
+	@Autowired
+	private ItemPedidoService itemPedidoService;
+
 	public Pedido inserirPedido(Pedido pedido) {
 		if(pedido.getComprador().getId() == null) {
 			throw new IdNaoFornecidoException("Id do comprador não foi fornecido");
@@ -40,11 +44,11 @@ public class PedidoService {
 		if(pedido.getVendedor().getId() == null) {
 			throw new IdNaoFornecidoException("Id do vendedor não foi fornecido");
 		}
+
 		Usuario comprador = usuarioRepository.findById(pedido.getComprador().getId())
 				.orElseThrow(() -> new UsuarioInexistenteException("Comprador associado ao id " + pedido.getComprador().getId() + " não existe"));
 
 		pedido.setComprador(comprador);
-
 
 		Usuario vendedor = usuarioRepository.findById(pedido.getVendedor().getId())
 				.orElseThrow(() -> new UsuarioInexistenteException("Vendedor associado ao id " + pedido.getVendedor().getId() + " não existe"));
@@ -55,7 +59,7 @@ public class PedidoService {
 			throw new PedidoInconsistenteException("Pedido deve conter produtos");
 		}
 		
-		verificaListaItemPedido(vendedor, pedido.getListaItemPedido());
+		itemPedidoService.verificaListaItemPedido(vendedor, pedido.getListaItemPedido());
 
 		pedido.setListaItemPedido(insereIdPedidoListaItemPedidos(pedidoRepository.getNextValMySequence(), pedido));
 		pedido.setListaItemPedido(atualizaPrecosItemPedido(pedido.getListaItemPedido()));
@@ -66,7 +70,7 @@ public class PedidoService {
 		return pedidoRepository.saveAndFlush(pedido);
 		
 	}
-	
+
 	@Transactional
 	public Pedido atualizarPedido(Long id, Pedido pedido) {
 		Pedido pedidoBD = pedidoRepository.findById(id)
@@ -80,9 +84,10 @@ public class PedidoService {
 			pedidoBD.setFretePedido(pedido.getFretePedido());
 		}
 		if(pedido.getListaItemPedido() != null && pedido.getListaItemPedido().size() != 0) {
-			verificaListaItemPedido(pedidoBD.getVendedor(), pedido.getListaItemPedido());
+			itemPedidoService.verificaListaItemPedido(pedidoBD.getVendedor(), pedido.getListaItemPedido());
 			pedido.setListaItemPedido(insereIdPedidoListaItemPedidos(pedidoBD.getId(), pedido));
 			pedido.setListaItemPedido(atualizaPrecosItemPedido(pedido.getListaItemPedido()));
+			itemPedidoService.atualizarListaItemPedido(id, pedidoBD.getVendedor(), pedido.getListaItemPedido());
 		}
 		// Resolver Put
 		return pedidoBD;
@@ -102,37 +107,22 @@ public class PedidoService {
 
 		String assunto = "Marketplace Grupo 4 - Pedido " + pedidoBD.getId() + " finalizado";
 		String conteudo = pedidoBD.gerarTemplateEmail();
-		mailConfig.sendMail(pedidoBD.getComprador().getEmail(), assunto, conteudo);
+		try {
+			mailConfig.sendMail(pedidoBD.getComprador().getEmail(), assunto, conteudo);
+		} catch (MessagingException e) {
+			throw new EmailNaoEnviadoException("Ocorreu um erro na criação do email de confirmação de pedido");
+		}
 
 		return pedidoBD;
 	}
 
-
-	public void verificaListaItemPedido(Usuario vendedor, List<ItemPedido> listaItemPedido) {
-		for(ItemPedido itemPedidoAtual : listaItemPedido) {
-			if(itemPedidoAtual.getProduto().getId() == null) {
-				throw new IdNaoFornecidoException("Id do produto não foi fornecido");
-			}
-			if(itemPedidoAtual.getQuantidade() <= 0) {
-				throw new PedidoInconsistenteException("Quantidade de produtos inválida");
-			}
-			Produto produto = produtoRepository.findById(itemPedidoAtual.getProduto().getId())
-				.orElseThrow(() -> new ProdutoInexistenteException("Produto associado ao id " + itemPedidoAtual.getProduto().getId() + " não existe"));
-			if(!produto.getVendedor().getId().equals(vendedor.getId())) {
-				throw new PedidoInconsistenteException("Produto associado ao id " + produto.getId() + " não pertence ao vendedor de id " + vendedor.getId());
-			}
-			if(itemPedidoAtual.getQuantidade() > produto.getQtdEstoque()) {
-				throw new PedidoInconsistenteException("Produto associado ao id " + produto.getId() + " não possui estoque suficiente. Tente mais tarde");
-			}
-		}
-	}
-	
 	public List<ItemPedido> atualizaPrecosItemPedido(List<ItemPedido> listaItemPedido){
 		int indice;
 		for(indice = 0; indice < listaItemPedido.size(); indice++) {
 			long id = listaItemPedido.get(indice).getProduto().getId();
 			Produto produto = produtoRepository.findById(id)
 					.orElseThrow(() -> new ProdutoInexistenteException("Produto associado ao id " + id + " não existe"));
+			produto = (Produto) Hibernate.unproxy(produto);
 			listaItemPedido.get(indice).setPrecoUnitario(produto.getPrecoUnitario());
 			listaItemPedido.set(indice, listaItemPedido.get(indice));
 			listaItemPedido.get(indice).setProduto(produto);

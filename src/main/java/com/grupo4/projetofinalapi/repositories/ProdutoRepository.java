@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Long>{
+	// TODO Procurar produto por palavra chave
 	List<Produto> findAllByNomeIgnoreCase(String nome);
 }

@@ -3,16 +3,20 @@ package com.grupo4.projetofinalapi.controllers;
 import com.grupo4.projetofinalapi.dto.ProdutoDTO;
 import com.grupo4.projetofinalapi.entities.FotoProduto;
 import com.grupo4.projetofinalapi.entities.Produto;
+import com.grupo4.projetofinalapi.exceptions.FotoProdutoInexistenteException;
+import com.grupo4.projetofinalapi.groups.GruposValidacao;
 import com.grupo4.projetofinalapi.services.FotoProdutoService;
 import com.grupo4.projetofinalapi.services.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
@@ -41,7 +45,7 @@ public class ProdutoController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ProdutoDTO> inserirProduto(@RequestParam MultipartFile file, @RequestParam Produto produto) {
+	public ResponseEntity<ProdutoDTO> inserirProduto(@RequestParam MultipartFile file, @Valid @RequestParam Produto produto) {
 		Produto produtoTemp;
 		try {
 			produtoTemp = produtoService.inserirProduto(produto, file);

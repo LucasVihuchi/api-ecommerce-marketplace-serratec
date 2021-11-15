@@ -5,6 +5,7 @@ import com.grupo4.projetofinalapi.entities.Endereco;
 import com.grupo4.projetofinalapi.entities.Pedido;
 import com.grupo4.projetofinalapi.entities.Usuario;
 import com.grupo4.projetofinalapi.enums.Sexo;
+import com.grupo4.projetofinalapi.exceptions.EnderecoInexistenteException;
 import com.grupo4.projetofinalapi.exceptions.EnderecoInvalidoException;
 import com.grupo4.projetofinalapi.exceptions.UsuarioInexistenteException;
 import com.grupo4.projetofinalapi.repositories.EnderecoRepository;
@@ -29,11 +30,11 @@ public class UsuarioService {
 	private UsuarioRepository usuarioRepository;
 	
 	@Autowired
-	private ConsultaCepService consulta;
+	private EnderecoService enderecoService;
 	
 	
 	public Usuario inserirUsuario(Usuario usuarioRecebido){
-		usuarioRecebido.setEndereco(completaEndereco(usuarioRecebido.getEndereco()));
+		usuarioRecebido.setEndereco(enderecoService.completaEndereco(usuarioRecebido.getEndereco()));
 		return usuarioRepository.saveAndFlush(usuarioRecebido);
 	}
 	
@@ -71,23 +72,13 @@ public class UsuarioService {
 		if (usuario.getDataNascimento() != null)  {
 			usuarioBD.setDataNascimento(usuario.getDataNascimento());
 		}
-		if (usuario.getEndereco().getCep() != null)  {
-			usuarioBD.setEndereco(completaEndereco(usuario.getEndereco()));
+		if (usuario.getEndereco() != null)  {
+			enderecoService.atualizarEndereco(usuarioBD.getEndereco().getId(), usuario.getEndereco());
 		}
 		return usuarioBD;
 	}
 
-	public Endereco completaEndereco(Endereco endereco) {
-		ResponseEntity<EnderecoDTO> enderecoValidado = consulta.getEndereco(endereco.getCep());
-		if(!enderecoValidado.getStatusCode().equals(HttpStatus.OK) || enderecoValidado.getBody().isErro()) {
-			throw new EnderecoInvalidoException("CEP '" + endereco.getCep() + "' é inválido");
-		}
-		endereco.preencherDadosViaCep(enderecoValidado.getBody());
-//		if((enderecoValidado.getBody() == null) || (!Endereco.enderecoEhValido(endereco, enderecoValidado.getBody()))) {
-//			throw new EnderecoInvalidoException("Dados de endereço inválidos");
-//		}
-		return endereco;
-	}
+
 
 	public List<Pedido> obterListaPedidosPorComprador(Long id){
 		Usuario usuarioBD = usuarioRepository.findById(id)

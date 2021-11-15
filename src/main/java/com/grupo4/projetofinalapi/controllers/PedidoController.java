@@ -3,6 +3,7 @@ package com.grupo4.projetofinalapi.controllers;
 import com.grupo4.projetofinalapi.dto.PedidoDTO;
 import com.grupo4.projetofinalapi.entities.Pedido;
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
+import com.grupo4.projetofinalapi.services.ItemPedidoService;
 import com.grupo4.projetofinalapi.services.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,9 @@ import java.net.URI;
 public class PedidoController {
 	@Autowired
 	private PedidoService pedidoService;
+
+	@Autowired
+	private ItemPedidoService itemPedidoService;
 	
 	@PostMapping
 	public ResponseEntity<PedidoDTO> realizarPedido(@Validated(GruposValidacao.ValidadorPost.class) @RequestBody PedidoDTO pedidoDTO){
@@ -38,6 +42,8 @@ public class PedidoController {
 
 		Pedido pedido = pedidoDTO.converterParaPedido();
 		pedido = pedidoService.atualizarPedido(id, pedido);
+		pedido.setListaItemPedido(itemPedidoService.retornarListaItemPedidoPorPedidoId(id));
+
 		return ResponseEntity.ok().body(new PedidoDTO(pedido));
 	}
 
