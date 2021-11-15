@@ -5,6 +5,7 @@ import com.grupo4.projetofinalapi.groups.GruposValidacao;
 import com.grupo4.projetofinalapi.services.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -30,6 +31,7 @@ public class CategoriaController {
 	}
 	
 	@PostMapping
+	@PreAuthorize("hasRole('ROLE_usuario')")
 	public ResponseEntity<Object> inserirCategoria(@Validated(GruposValidacao.ValidadorPost.class) @RequestBody Categoria categoria){
 		categoria = categoriaService.inserirCategoria(categoria);
 

@@ -3,6 +3,7 @@ package com.grupo4.projetofinalapi.controllers;
 import com.grupo4.projetofinalapi.dto.ProdutoDTO;
 import com.grupo4.projetofinalapi.entities.FotoProduto;
 import com.grupo4.projetofinalapi.entities.Produto;
+import com.grupo4.projetofinalapi.entities.Usuario;
 import com.grupo4.projetofinalapi.exceptions.FotoProdutoInexistenteException;
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
 import com.grupo4.projetofinalapi.services.FotoProdutoService;
@@ -11,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,10 +49,12 @@ public class ProdutoController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ProdutoDTO> inserirProduto(@RequestParam MultipartFile file, @Valid @RequestParam Produto produto) {
+	@PreAuthorize("hasRole('ROLE_usuario')")
+	public ResponseEntity<ProdutoDTO> inserirProduto(@RequestParam MultipartFile file, @Valid @RequestParam Produto produto, @AuthenticationPrincipal UserDetails usuarioAutenticado) {
+
 		Produto produtoTemp;
 		try {
-			produtoTemp = produtoService.inserirProduto(produto, file);
+			produtoTemp = produtoService.inserirProduto(produto, file, usuarioAutenticado);
 		} catch (IOException e) {
 			return ResponseEntity.internalServerError().build();
 		}

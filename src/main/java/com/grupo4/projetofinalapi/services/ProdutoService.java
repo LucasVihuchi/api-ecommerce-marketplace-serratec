@@ -12,6 +12,7 @@ import com.grupo4.projetofinalapi.repositories.CategoriaRepository;
 import com.grupo4.projetofinalapi.repositories.ProdutoRepository;
 import com.grupo4.projetofinalapi.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,12 +43,15 @@ public class ProdutoService {
 		return produtoRepository.findAllByNomeIgnoreCase(nome);
 	}
 
-	public Produto inserirProduto(Produto produto, MultipartFile file) throws IOException {
+	public Produto inserirProduto(Produto produto, MultipartFile file, UserDetails usuarioAutenticado) throws IOException {
 		validaProdutoPost(produto);
+
+		Usuario vendedor = usuarioRepository.findByNomeUsuario(usuarioAutenticado.getUsername())
+				.orElseThrow(() -> new UsuarioInexistenteException("Usuário associado ao nome de usuário '" + usuarioAutenticado.getUsername() + "' não existe"));
 
 		List<Produto> listaProdutos = produtoRepository.findAllByNomeIgnoreCase(produto.getNome());
 		for(Produto produtoAtual : listaProdutos) {
-			boolean vendedorIgual = produtoAtual.getVendedor().getId().equals(produto.getVendedor().getId());
+			boolean vendedorIgual = produtoAtual.getVendedor().getId().equals(vendedor.getId());
 			boolean nomeProdutoIgual = produtoAtual.getNome().equalsIgnoreCase(produto.getNome());
 			if(vendedorIgual && nomeProdutoIgual) {
 				throw new ProdutoExistenteException("Produto com o nome '" + produto.getNome() + "' já cadastrado para este vendedor");
@@ -61,17 +65,10 @@ public class ProdutoService {
 
 		produto.setFoto(fotoProduto);
 
-		if(produto.getVendedor() == null || produto.getVendedor().getId() == null) {
-			throw new UsuarioInexistenteException("Vendedor deve ser informado");
-		}
-
-		Usuario vendedor = usuarioRepository.findById(produto.getVendedor().getId())
-				.orElseThrow(() -> new UsuarioInexistenteException("Usuário associado ao id " + produto.getId() + " não existe"));
-
 		if (!vendedor.isEhVendedor()) {
 			vendedor.setEhVendedor(true);
+			usuarioRepository.saveAndFlush(vendedor);
 		}
-		usuarioRepository.saveAndFlush(vendedor);
 		produto.setVendedor(vendedor);
 
 		if(produto.getCategoria() == null || produto.getCategoria().getId() == null) {

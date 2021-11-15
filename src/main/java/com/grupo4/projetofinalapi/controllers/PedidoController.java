@@ -7,6 +7,9 @@ import com.grupo4.projetofinalapi.services.ItemPedidoService;
 import com.grupo4.projetofinalapi.services.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -23,33 +26,37 @@ public class PedidoController {
 	private ItemPedidoService itemPedidoService;
 	
 	@PostMapping
-	public ResponseEntity<PedidoDTO> realizarPedido(@Validated(GruposValidacao.ValidadorPost.class) @RequestBody PedidoDTO pedidoDTO){
+	@PreAuthorize("hasRole('ROLE_usuario')")
+	public ResponseEntity<PedidoDTO> realizarPedido(@Validated(GruposValidacao.ValidadorPost.class) @RequestBody PedidoDTO pedidoDTO, @AuthenticationPrincipal UserDetails usuarioAutenticado){
 		Pedido pedido = pedidoDTO.converterParaPedido();
-		
+		pedido = pedidoService.inserirPedido(pedido, usuarioAutenticado);
+
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentContextPath()
-				.path("/api/v1/usuarios/{id}/compras")
+				.path("/api/v1/pedidos/{id}")
 				.buildAndExpand(pedido.getId())
 				.toUri();
 
-		pedido = pedidoService.inserirPedido(pedido);
 		return ResponseEntity.created(uri).body(new PedidoDTO(pedido));
 	}
 
 	@PutMapping("{id}")
+	@PreAuthorize("hasRole('ROLE_usuario')")
 	public ResponseEntity<PedidoDTO> atualizarPedido(@PathVariable Long id,
-													 @Validated(GruposValidacao.ValidadorPut.class) @RequestBody PedidoDTO pedidoDTO) {
+													 @Validated(GruposValidacao.ValidadorPut.class) @RequestBody PedidoDTO pedidoDTO,
+													 @AuthenticationPrincipal UserDetails usuarioAutenticado) {
 
 		Pedido pedido = pedidoDTO.converterParaPedido();
-		pedido = pedidoService.atualizarPedido(id, pedido);
+		pedido = pedidoService.atualizarPedido(id, pedido, usuarioAutenticado);
 		pedido.setListaItemPedido(itemPedidoService.retornarListaItemPedidoPorPedidoId(id));
 
 		return ResponseEntity.ok().body(new PedidoDTO(pedido));
 	}
 
 	@PutMapping("{id}/finalizar")
-	public ResponseEntity<PedidoDTO> finalizarPedido(@PathVariable Long id) {
-		Pedido pedido = pedidoService.finalizarPedido(id);
+	@PreAuthorize("hasRole('ROLE_usuario')")
+	public ResponseEntity<PedidoDTO> finalizarPedido(@PathVariable Long id, @AuthenticationPrincipal UserDetails usuarioAutenticado) {
+		Pedido pedido = pedidoService.finalizarPedido(id, usuarioAutenticado);
 		return ResponseEntity.ok().body(new PedidoDTO(pedido));
 	}
 }

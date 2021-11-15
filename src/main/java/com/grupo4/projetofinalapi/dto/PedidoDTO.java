@@ -32,8 +32,7 @@ public class PedidoDTO {
 	
 	@Enumerated (EnumType.STRING)
 	private StatusPedido statusPedido;
-	
-	@NotNull(message = "Comprador não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
+
 	private UsuarioDTO comprador;
 
 	@NotNull(message = "Vendedor não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})

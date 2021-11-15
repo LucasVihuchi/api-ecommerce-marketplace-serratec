@@ -13,6 +13,8 @@ import com.grupo4.projetofinalapi.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -35,21 +37,23 @@ public class UsuarioService {
 	
 	public Usuario inserirUsuario(Usuario usuarioRecebido){
 		usuarioRecebido.setEndereco(enderecoService.completaEndereco(usuarioRecebido.getEndereco()));
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		usuarioRecebido.setSenhaUsuario(passwordEncoder.encode(usuarioRecebido.getSenhaUsuario()));
 		return usuarioRepository.saveAndFlush(usuarioRecebido);
 	}
 	
-	public void deletarUsuario(Long id) {
-		Optional<Usuario> usuario = usuarioRepository.findById(id);
+	public void deletarUsuario(UserDetails usuarioAutenticado) {
+		Optional<Usuario> usuario = usuarioRepository.findByNomeUsuario(usuarioAutenticado.getUsername());
 		if (usuario.isEmpty()) {
-			throw new UsuarioInexistenteException("Usuário associado ao id " + id + " não existe");
+			throw new UsuarioInexistenteException("Usuário associado ao nome de usuário '" + usuarioAutenticado.getUsername() + "' não existe");
 		}
-		usuarioRepository.deleteById(id);
+		usuarioRepository.deleteById(usuario.get().getId());
 	}
 	
 	@Transactional
-	public Usuario atualizarUsuario(Long id, Usuario usuario) {
-		Usuario usuarioBD = usuarioRepository.findById(id)
-				.orElseThrow(() -> new UsuarioInexistenteException("Usuário associado ao id " + id + " não existe"));
+	public Usuario atualizarUsuario(Usuario usuario, UserDetails usuarioAutenticado) {
+		Usuario usuarioBD = usuarioRepository.findByNomeUsuario(usuarioAutenticado.getUsername())
+				.orElseThrow(() -> new UsuarioInexistenteException("Usuário associado ao nome de usuário '" + usuarioAutenticado.getUsername() + "' não existe"));
 
 		if (usuario.getNome() != null && !Objects.equals(usuario.getNome(), ""))  {
 			usuarioBD.setNome(usuario.getNome());
@@ -67,7 +71,8 @@ public class UsuarioService {
 			usuarioBD.setTelefoneSecundario(usuario.getTelefoneSecundario());
 		}
 		if (usuario.getSenhaUsuario() != null && !Objects.equals(usuario.getSenhaUsuario(), ""))  {
-			usuarioBD.setSenhaUsuario(usuario.getSenhaUsuario());
+			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+			usuarioBD.setSenhaUsuario(passwordEncoder.encode(usuario.getSenhaUsuario()));
 		}
 		if (usuario.getDataNascimento() != null)  {
 			usuarioBD.setDataNascimento(usuario.getDataNascimento());
@@ -78,17 +83,15 @@ public class UsuarioService {
 		return usuarioBD;
 	}
 
-
-
-	public List<Pedido> obterListaPedidosPorComprador(Long id){
-		Usuario usuarioBD = usuarioRepository.findById(id)
-				.orElseThrow(() -> new UsuarioInexistenteException("Usuário associado ao id " + id + " não existe"));
+	public List<Pedido> obterListaPedidosPorComprador(UserDetails usuarioAutenticado){
+		Usuario usuarioBD = usuarioRepository.findByNomeUsuario(usuarioAutenticado.getUsername())
+				.orElseThrow(() -> new UsuarioInexistenteException("Usuário associado ao nome de usuário '" + usuarioAutenticado.getUsername() + "' não existe"));
 		return usuarioBD.getListaPedidosFeitos();
 	}
 
-	public List<Pedido> obterListaPedidosPorVendedor(Long id){
-		Usuario usuarioBD = usuarioRepository.findById(id)
-				.orElseThrow(() -> new UsuarioInexistenteException("Usuário associado ao id " + id + " não existe"));
+	public List<Pedido> obterListaPedidosPorVendedor(UserDetails usuarioAutenticado){
+		Usuario usuarioBD = usuarioRepository.findByNomeUsuario(usuarioAutenticado.getUsername())
+				.orElseThrow(() -> new UsuarioInexistenteException("Usuário associado ao nome de usuário '" + usuarioAutenticado.getUsername() + "' não existe"));
 		return usuarioBD.getListaPedidosRecebidos();
 	}
 

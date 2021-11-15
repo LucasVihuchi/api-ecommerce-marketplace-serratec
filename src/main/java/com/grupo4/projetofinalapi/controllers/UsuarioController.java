@@ -8,6 +8,9 @@ import com.grupo4.projetofinalapi.services.PedidoService;
 import com.grupo4.projetofinalapi.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -41,29 +44,33 @@ public class UsuarioController {
 		return ResponseEntity.created(uri).body(new UsuarioDTO(usuario));
 	}
 	
-	@DeleteMapping("{id}")
-	public ResponseEntity<?> deletarUsuario(@PathVariable Long id) {
-		usuarioService.deletarUsuario(id);
+	@DeleteMapping
+	@PreAuthorize("hasRole('ROLE_usuario')")
+	public ResponseEntity<?> deletarUsuario(@AuthenticationPrincipal UserDetails usuarioAutenticado) {
+		usuarioService.deletarUsuario(usuarioAutenticado);
 		return ResponseEntity.ok().build();
 	}
 	
-	@PutMapping("{id}")
-	public ResponseEntity<UsuarioDTO> atualizarUsuario(@PathVariable Long id, @Validated(GruposValidacao.ValidadorPut.class) @RequestBody UsuarioDTO usuarioDTO) {
+	@PutMapping
+	@PreAuthorize("hasRole('ROLE_usuario')")
+	public ResponseEntity<UsuarioDTO> atualizarUsuario(@Validated(GruposValidacao.ValidadorPut.class) @RequestBody UsuarioDTO usuarioDTO, @AuthenticationPrincipal UserDetails usuarioAutenticado) {
 		Usuario usuario = usuarioDTO.converterParaUsuario();
-		usuario = usuarioService.atualizarUsuario(id, usuario);
+		usuario = usuarioService.atualizarUsuario(usuario, usuarioAutenticado);
 		
 		return ResponseEntity.ok().body(new UsuarioDTO(usuario));
 	}
 
-	@GetMapping("{id}/compras")
-	public ResponseEntity<List<PedidoDTO>> obterListaPedidosPorComprador(@PathVariable Long id){
-		List<PedidoDTO> listaPedidosDTO = PedidoDTO.converterParaPedidosDTO(usuarioService.obterListaPedidosPorComprador(id));
+	@GetMapping("compras")
+	@PreAuthorize("hasRole('ROLE_usuario')")
+	public ResponseEntity<List<PedidoDTO>> obterListaPedidosPorComprador(@AuthenticationPrincipal UserDetails usuarioAutenticado){
+		List<PedidoDTO> listaPedidosDTO = PedidoDTO.converterParaPedidosDTO(usuarioService.obterListaPedidosPorComprador(usuarioAutenticado));
 		return ResponseEntity.ok().body(listaPedidosDTO);
 	}
 
-	@GetMapping("{id}/vendas")
-	public ResponseEntity<List<PedidoDTO>> obterListaPedidosPorVendedor(@PathVariable Long id){
-		List<PedidoDTO> listaPedidosDTO = PedidoDTO.converterParaPedidosDTO(usuarioService.obterListaPedidosPorVendedor(id));
+	@GetMapping("vendas")
+	@PreAuthorize("hasRole('ROLE_usuario')")
+	public ResponseEntity<List<PedidoDTO>> obterListaPedidosPorVendedor(@AuthenticationPrincipal UserDetails usuarioAutenticado){
+		List<PedidoDTO> listaPedidosDTO = PedidoDTO.converterParaPedidosDTO(usuarioService.obterListaPedidosPorVendedor(usuarioAutenticado));
 		return ResponseEntity.ok().body(listaPedidosDTO);
 	}
 }

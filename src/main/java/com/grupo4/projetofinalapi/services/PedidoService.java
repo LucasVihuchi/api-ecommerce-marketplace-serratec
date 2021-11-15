@@ -12,6 +12,7 @@ import com.grupo4.projetofinalapi.repositories.ProdutoRepository;
 import com.grupo4.projetofinalapi.repositories.UsuarioRepository;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -37,16 +38,13 @@ public class PedidoService {
 	@Autowired
 	private ItemPedidoService itemPedidoService;
 
-	public Pedido inserirPedido(Pedido pedido) {
-		if(pedido.getComprador().getId() == null) {
-			throw new IdNaoFornecidoException("Id do comprador não foi fornecido");
-		}
+	public Pedido inserirPedido(Pedido pedido, UserDetails usuarioAutenticado) {
 		if(pedido.getVendedor().getId() == null) {
 			throw new IdNaoFornecidoException("Id do vendedor não foi fornecido");
 		}
 
-		Usuario comprador = usuarioRepository.findById(pedido.getComprador().getId())
-				.orElseThrow(() -> new UsuarioInexistenteException("Comprador associado ao id " + pedido.getComprador().getId() + " não existe"));
+		Usuario comprador = usuarioRepository.findByNomeUsuario(usuarioAutenticado.getUsername())
+				.orElseThrow(() -> new UsuarioInexistenteException("Comprador associado ao nome de usuário '" + usuarioAutenticado.getUsername() + "' não existe"));
 
 		pedido.setComprador(comprador);
 
@@ -72,12 +70,19 @@ public class PedidoService {
 	}
 
 	@Transactional
-	public Pedido atualizarPedido(Long id, Pedido pedido) {
+	public Pedido atualizarPedido(Long id, Pedido pedido, UserDetails usuarioAutenticado) {
 		Pedido pedidoBD = pedidoRepository.findById(id)
 				.orElseThrow(() -> new PedidoInexistenteException("Pedido associado ao id " + id + " não existe"));
 
+		Usuario compradorBD = usuarioRepository.findByNomeUsuario(usuarioAutenticado.getUsername())
+				.orElseThrow(() -> new UsuarioInexistenteException("Usuário associado ao nome de usuário '" + usuarioAutenticado.getUsername() + "' não existe"));
+
+		if(!pedidoBD.getComprador().getId().equals(compradorBD.getId())) {
+			throw new PedidoInconsistenteException("Usuário autenticado não tem permissão para alterar pedidos de terceiros");
+		}
+
 		if(pedidoBD.getStatusPedido() == StatusPedido.FINALIZADO) {
-			throw new PedidoJaFinalizadoException("Pedido já finalizado");
+			throw new PedidoJaFinalizadoException("Pedido associado ao id " + id + " já foi finalizado");
 		}
 
 		if(pedido.getFretePedido() != null) {
@@ -95,13 +100,21 @@ public class PedidoService {
 	
 	//TODO lembrar de alterar o estoque quando finalizar pedido e salvar quantidade e preço.
 	@Transactional
-	public Pedido finalizarPedido(Long id) {
+	public Pedido finalizarPedido(Long id, UserDetails usuarioAutenticado) {
 		Pedido pedidoBD = pedidoRepository.findById(id)
 				.orElseThrow(() -> new PedidoInexistenteException("Pedido associado ao id " + id + " não existe"));
+
+		Usuario compradorBD = usuarioRepository.findByNomeUsuario(usuarioAutenticado.getUsername())
+				.orElseThrow(() -> new UsuarioInexistenteException("Usuário associado ao nome de usuário '" + usuarioAutenticado.getUsername() + "' não existe"));
+
+		if(!pedidoBD.getComprador().getId().equals(compradorBD.getId())) {
+			throw new PedidoInconsistenteException("Usuário autenticado não tem permissão para alterar pedidos de terceiros");
+		}
 
 		if(pedidoBD.getStatusPedido().equals(StatusPedido.FINALIZADO)) {
 			throw new PedidoJaFinalizadoException("Pedido associado ao id " + id + " já foi finalizado");
 		}
+
 		atualizaQtdEstoque(pedidoBD.getListaItemPedido());
 		pedidoBD.setStatusPedido(StatusPedido.FINALIZADO);
 
