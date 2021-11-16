@@ -2,15 +2,12 @@ package com.grupo4.projetofinalapi.entities;
 
 import com.grupo4.projetofinalapi.dto.EnderecoDTO;
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Objects;
-
-/*
- * - O endereço deverá ser validado através da API Via Cep.
- */
 
 @Entity
 public class Endereco {
@@ -18,33 +15,41 @@ public class Endereco {
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	@Column (name = "cod_endereco", nullable = false, columnDefinition = "serial")
+	@ApiModelProperty(value = "Identificador único do endereço")
 	private Long id;
 	
 	@NotBlank(message = "Logradouro não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@Column (nullable = false)
+	@ApiModelProperty(value = "Logradouro do endereço", required = true)
 	private String logradouro;
 	
-	@Column 
+	@Column
+	@ApiModelProperty(value = "Número do endereço")
 	private int numero;
 	
 	@NotBlank(message = "CEP não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@Size(min = 8, max = 8, message = "Tamanho deve ser de {min} caracteres", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
 	@Column (nullable = false, length = 8)
+	@ApiModelProperty(value = "CEP do endereço", required = true)
 	private String cep;
 	
-	@Column 
+	@Column
+	@ApiModelProperty(value = "Complemento do endereço")
 	private String complemento;
 	
 	@NotBlank(message = "Bairro não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@Column (nullable = false)
+	@ApiModelProperty(value = "Bairro do endereço", required = true)
 	private String bairro;
 	
 	@NotBlank(message = "Cidade não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@Column (nullable = false)
+	@ApiModelProperty(value = "Cidade do endereço", required = true)
 	private String cidade;
 	
 	@NotBlank(message = "Estado não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@Column (nullable = false)
+	@ApiModelProperty(value = "Estado do endereço", required = true)
 	private String estado;
 
 	public Endereco() {
@@ -74,14 +79,6 @@ public class Endereco {
 		this.setCidade(enderecoDTO.getLocalidade());
 		this.setEstado(enderecoDTO.getUf());
 	}
-
-//	public static boolean enderecoEhValido(Endereco endereco, EnderecoDTO enderecoDTO) {
-//		boolean estadoValido = endereco.getEstado().equals(enderecoDTO.getUf());
-//		boolean bairroValido = endereco.getBairro().equals(enderecoDTO.getBairro());
-//		boolean cidadeValida = endereco.getCidade().equals(enderecoDTO.getLocalidade());
-//
-//		return estadoValido && bairroValido && cidadeValida;
-//	}
 
 	public Long getId() {
 		return id;

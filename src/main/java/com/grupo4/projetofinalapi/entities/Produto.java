@@ -1,6 +1,7 @@
 package com.grupo4.projetofinalapi.entities;
 
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -21,46 +22,56 @@ public class Produto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column (name = "cod_produto", nullable = false, columnDefinition = "serial")
+	@ApiModelProperty(value = "Identificador único do produto")
 	private Long id;
 	
 	@NotBlank(message = "Nome não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@Column (nullable = false)
+	@ApiModelProperty(value = "Nome do produto", required = true)
 	private String nome;
 	
 	@NotBlank(message = "Descrição não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@Column (nullable = false)
+	@ApiModelProperty(value = "Descrição do produto", required = true)
 	private String descricao;
 	
 	@NotNull(message = "Quantidade em estoque não pode ser nula", groups = {GruposValidacao.ValidadorPost.class})
 	@PositiveOrZero(message = "Quantidade não pode ser negativa ou zero", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
 	@Column (nullable = false)
+	@ApiModelProperty(value = "Quantidade de estoque do produto", required = true)
 	private int qtdEstoque;
 	
 	@Past(message = "Data deve ser anterior a hoje", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
 	@Column
+	@ApiModelProperty(value = "Data de fabricação do produto")
 	private LocalDate dataFabricacao;
 	
 	@NotNull(message = "Tempo de garantia não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@PositiveOrZero(message = "Tempo de garantia não pode ser negativo ou zero", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
 	@Column (nullable = false)
+	@ApiModelProperty(value = "Tempo de garantia do produto", required = true)
 	private int tempoGarantia;
 	
 	@Positive(message = "Preço unitário não pode ser negativo ou zero", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
 	@DecimalMax (value = "99999.99", message = "Preço unitário não pode ser superior a R$ {value}", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
 	@Column (nullable = false, columnDefinition = "numeric(7,2)")
+	@ApiModelProperty(value = "Preço unitário do produto", required = true)
 	private Double precoUnitario;
 	
 	@NotNull(message = "Vendedor não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinColumn (name = "cod_vendedor", nullable = false, columnDefinition = "int4")
+	@ApiModelProperty(value = "Vendedor do produto", required = true)
 	private Usuario vendedor;
 	
 	@NotNull(message = "Categoria não pode ser nula", groups = {GruposValidacao.ValidadorPost.class})
 	@ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinColumn (name = "cod_categoria", nullable = false, columnDefinition = "int4")
+	@ApiModelProperty(value = "Categoria do produto", required = true)
 	private Categoria categoria;
 
 	@OneToOne(mappedBy = "produto", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ApiModelProperty(value = "Foto do produto", required = true)
 	private FotoProduto foto;
 
 	public Produto() {

@@ -8,6 +8,9 @@ import com.grupo4.projetofinalapi.exceptions.FotoProdutoInexistenteException;
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
 import com.grupo4.projetofinalapi.services.FotoProdutoService;
 import com.grupo4.projetofinalapi.services.ProdutoService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -36,6 +39,10 @@ public class ProdutoController {
 	private FotoProdutoService fotoProdutoService;
 	
 	@GetMapping
+	@ApiOperation(value = "Retorna todos os produtos", notes = "Retornar produtos")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorna todos os produtos")
+	})
 	public ResponseEntity<List<ProdutoDTO>> obterProdutos(){
 		List<Produto> listaProdutos = produtoService.obterProdutos();
 
@@ -43,6 +50,10 @@ public class ProdutoController {
 	}
 	
 	@GetMapping("{nome}")
+	@ApiOperation(value = "Retorna os produtos pelo nome", notes = "Retornar produtos por nome")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorna os produtos pelo nome")
+	})
 	public ResponseEntity<List<ProdutoDTO>> obterProdutoPorNome(@PathVariable String nome){
 		List<Produto> listaProdutos = produtoService.obterProdutosPorNome(nome);
 		return ResponseEntity.ok().body(ProdutoDTO.converterParaListaProdutosDTO(listaProdutos));
@@ -50,6 +61,14 @@ public class ProdutoController {
 
 	@PostMapping
 	@PreAuthorize("hasRole('ROLE_usuario')")
+	@ApiOperation(value = "Insere um produto", notes = "Inserir produto")
+	@ApiResponses(value = {
+			@ApiResponse(code = 201, message = "Produto adicionado"),
+			@ApiResponse(code = 400, message = "Produto já foi adicionado anteriormente"),
+			@ApiResponse(code = 401, message = "Falha na autenticação do usuário"),
+			@ApiResponse(code = 404, message = "Usuário fornecido ou categoria fornecida não constam no sistema"),
+			@ApiResponse(code = 500, message = "Ocorreu um erro na manipulação do arquivo da foto")
+	})
 	public ResponseEntity<ProdutoDTO> inserirProduto(@RequestParam MultipartFile file, @Valid @RequestParam Produto produto, @AuthenticationPrincipal UserDetails usuarioAutenticado) {
 
 		Produto produtoTemp;
@@ -69,6 +88,11 @@ public class ProdutoController {
 	}
 
 	@GetMapping("{id}/foto")
+	@ApiOperation(value = "Retorna foto do produto pelo id", notes = "Retornar foto de produtos por id")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorna foto do produto pelo id"),
+			@ApiResponse(code = 404, message = "Foto do produto associada ao id fornecido não consta no sistema")
+	})
 	public ResponseEntity<byte[]> buscarFotoPorId(@PathVariable Long id) {
 		FotoProduto foto = fotoProdutoService.obterFotoPorProdutoId(id);
 

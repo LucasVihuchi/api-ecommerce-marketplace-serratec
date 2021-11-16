@@ -1,14 +1,13 @@
 package com.grupo4.projetofinalapi.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.grupo4.projetofinalapi.entities.Endereco;
 import com.grupo4.projetofinalapi.entities.Usuario;
 import com.grupo4.projetofinalapi.enums.Sexo;
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
 import com.grupo4.projetofinalapi.validations.ValidDataNascimento;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.validator.constraints.br.CPF;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -16,49 +15,62 @@ import java.time.LocalDate;
 @JsonIgnoreProperties(value = {"ehVendedor"}, allowGetters = true)
 public class UsuarioDTO {
 
+	@ApiModelProperty(value = "Identificador único do usuário")
 	private Long id;
 
 	@NotBlank(message = "Nome não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
+	@ApiModelProperty(value = "Nome do usuário", required = true)
 	private String nome;
 
 	@NotBlank(message = "Sobrenome não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
+	@ApiModelProperty(value = "Sobrenome do usuário", required = true)
 	private String sobrenome;
 
 	@NotNull(message = "Sexo não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
+	@ApiModelProperty(value = "Sexo do usuário", required = true)
 	private Sexo sexo;
 
 	@NotBlank(message = "Telefone principal não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@Size(min = 8, max = 13, message = "Telefone deve conter entre {min} e {max} dígitos", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
 	// TODO Tentar usar regex para evitar letras
 	// TODO Evitar bater dados duplicados no banco
+	@ApiModelProperty(value = "Telefone principal do usuário", required = true)
 	private String telefonePrincipal;
 
 	@Size(min = 8, max = 13, message = "Telefone deve conter entre {min} e {max} dígitos", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
+	@ApiModelProperty(value = "Telefone secundário do usuário")
 	private String telefoneSecundario;
 
 	@NotBlank(message = "Nome de usuário não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
+	@ApiModelProperty(value = "Nome de usuário do usuário", required = true)
 	private String nomeUsuario;
 
 	@NotBlank(message = "Senha não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
+	@ApiModelProperty(value = "Senha do usuário", required = true)
 	private String senhaUsuario;
 
 	@NotBlank(message = "E-mail não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@Email(message = "E-mail inválido", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
+	@ApiModelProperty(value = "Email do usuário", required = true)
 	private String email;
 
 	@NotBlank(message = "CPF não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@CPF(message = "CPF inválido", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
+	@ApiModelProperty(value = "CPF do usuário", required = true)
 	private String cpf;
 
 	@NotNull(message = "Data de nascimento não pode ser nula", groups = {GruposValidacao.ValidadorPost.class})
 	@ValidDataNascimento(message = "Usuário deve ser possuir mais de 18 anos ou menos de 120", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
 	@Past(message = "Data de nascimento deve ser anterior a hoje", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
+	@ApiModelProperty(value = "Data de nascimento do usuário", required = true)
 	private LocalDate dataNascimento;
 
+	@ApiModelProperty(value = "Indica se o usuário é um vendedor", required = true)
 	private boolean ehVendedor;
 
 	@JsonIgnoreProperties(value = {"estado", "cidade", "bairro"}, allowGetters = true)
 	@NotNull(message = "Endereço não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
+	@ApiModelProperty(value = "Endereço do usuário", required = true)
 	private Endereco endereco;
 
 	public UsuarioDTO(Long id,

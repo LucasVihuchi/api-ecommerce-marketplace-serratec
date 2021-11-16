@@ -1,6 +1,7 @@
 package com.grupo4.projetofinalapi.entities;
 
 import com.grupo4.projetofinalapi.enums.StatusPedido;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -32,32 +33,38 @@ public class Pedido {
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	@Column (name = "cod_pedido", nullable = false, columnDefinition = "serial")
+	@ApiModelProperty(value = "Identificador único da pedido")
 	private Long id;
 
 	@NotNull
 	@PastOrPresent
 	@Column (name = "data_pedido", nullable = false)
+	@ApiModelProperty(value = "Data de realização do pedido", required = true)
 	private LocalDateTime dataPedido;
 	
 	@NotNull
 	@Column (nullable = false, columnDefinition = "numeric(7,2)")
+	@ApiModelProperty(value = "Frete do pedido")
 	private Double fretePedido;
 	
 	@Enumerated (EnumType.STRING)
 	@Column (nullable = false)
+	@ApiModelProperty(value = "Status do pedido")
 	private StatusPedido statusPedido;
 	
 	@ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinColumn (name = "cod_comprador", nullable = false, columnDefinition = "int4")
+	@ApiModelProperty(value = "Comprador do pedido", required = true)
 	private Usuario comprador;
 	
 	@ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinColumn (name = "cod_vendedor", nullable = false, columnDefinition = "int4")
+	@ApiModelProperty(value = "Vendedor do pedido", required = true)
 	private Usuario vendedor;
 	
 	@OneToMany (mappedBy = "pedido", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ApiModelProperty(value = "Lista de itens do pedido", required = true)
 	private List<ItemPedido> listaItemPedido;
-
 
 	public Pedido() {
 	}

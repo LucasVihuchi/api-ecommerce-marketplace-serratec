@@ -1,5 +1,6 @@
 package com.grupo4.projetofinalapi.entities;
 
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -11,18 +12,22 @@ public class FotoProduto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cod_foto", nullable = false, columnDefinition = "serial")
+    @ApiModelProperty(value = "Identificador único da foto do produto")
     private Long id;
 
     @Lob
-    @Column(columnDefinition = "bytea")
+    @Column(columnDefinition = "bytea", nullable = false)
     @Type(type = "org.hibernate.type.BinaryType")
+    @ApiModelProperty(value = "Dados da foto", required = true)
     private byte[] dados;
 
-    @Column(length = 25)
+    @Column(length = 25, nullable = false)
+    @ApiModelProperty(value = "Tipo de arquivo da foto", required = true)
     private String tipo;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "cod_produto", columnDefinition = "int4")
+    @ApiModelProperty(value = "Produto a qual a foto pertence", required = true)
     private Produto produto;
 
     public FotoProduto() {

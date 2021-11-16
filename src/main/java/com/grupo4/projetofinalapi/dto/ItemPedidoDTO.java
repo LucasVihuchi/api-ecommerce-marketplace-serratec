@@ -5,6 +5,7 @@ import com.grupo4.projetofinalapi.entities.ItemPedido;
 import com.grupo4.projetofinalapi.entities.Pedido;
 import com.grupo4.projetofinalapi.entities.Produto;
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -16,22 +17,23 @@ import java.util.Objects;
 
 public class ItemPedidoDTO {
 
+    @ApiModelProperty(value = "Identificador único do item do pedido")
     private Long id;
 
     @NotNull(message = "Quantidade não pode ser nula", groups = {GruposValidacao.ValidadorPost.class})
     @Positive(message = "Quantidade não pode ser negativa ou zero", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
+    @ApiModelProperty(value = "Quantidade de produtos do item do pedido", required = true)
     private int quantidade;
 
     @NotBlank(message = "Preço não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
     @Positive(message = "Preço não pode ser negativo ou zero", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
+    @ApiModelProperty(value = "Preço unitário do produto do item do pedido", required = true)
     private Double precoUnitario;
 
     @NotNull(message = "Produto não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
     @JsonIgnoreProperties({"vendedor"})
+    @ApiModelProperty(value = "Produto do item do pedido", required = true)
     private ProdutoDTO produto;
-
-//    @NotNull(message = "Pedido não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
-//    private PedidoDTO pedido;
 
     public ItemPedidoDTO() {
     }
@@ -45,7 +47,6 @@ public class ItemPedidoDTO {
         this.quantidade = quantidade;
         this.precoUnitario = precoUnitario;
         this.produto = produto;
-//        this.pedido = pedido;
     }
 
     public ItemPedidoDTO(ItemPedido itemPedido) {
@@ -54,9 +55,6 @@ public class ItemPedidoDTO {
         this.quantidade = itemPedido.getQuantidade();
         this.precoUnitario = itemPedido.getPrecoUnitario();
         this.produto = new ProdutoDTO(itemPedido.getProduto());
-//        if(itemPedido.getPedido() != null) {
-//            this.pedido = new PedidoDTO(itemPedido.getPedido());
-//        }
 
     }
 
@@ -68,11 +66,6 @@ public class ItemPedidoDTO {
         if(this.produto != null) {
             itemPedido.setProduto(this.produto.converterParaProduto());
         }
-//        if(this.pedido != null) {
-//            itemPedido.setPedido(this.pedido.converterParaPedido());
-//        }
-
-
         return itemPedido;
     }
 
@@ -107,15 +100,6 @@ public class ItemPedidoDTO {
     public void setProduto(ProdutoDTO produto) {
         this.produto = produto;
     }
-
-//    public PedidoDTO getPedido() {
-//        return pedido;
-//    }
-//
-//    public void setPedido(PedidoDTO pedido) {
-//        this.pedido = pedido;
-//    }
-
 
     @Override
     public boolean equals(Object o) {

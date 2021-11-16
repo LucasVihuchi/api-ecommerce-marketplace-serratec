@@ -20,7 +20,8 @@ public class SpringFoxConfig {
                 .apis(RequestHandlerSelectors.basePackage("com.grupo4.projetofinalapi.controllers"))
                 .paths(PathSelectors.any())
                 .build()
-                .apiInfo(apiInfo());
+                .apiInfo(apiInfo())
+                .useDefaultResponseMessages(false);
     }
 
     private ApiInfo apiInfo() {

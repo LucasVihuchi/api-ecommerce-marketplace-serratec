@@ -1,17 +1,11 @@
 package com.grupo4.projetofinalapi.entities;
 
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
-
-/*
- * Temos que fazer o GetAll e o GetCategoriaPorNome; post
- * - Visualizar todas as categorias ou uma categoria especifica pelo nome.
- * - Criar uma nova categoria.
- * -
- */
 
 @Entity
 public class Categoria {
@@ -19,14 +13,17 @@ public class Categoria {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column (name = "cod_categoria", nullable = false, columnDefinition = "serial")
+	@ApiModelProperty(value = "Identificador único da categoria")
 	private Long id;
 	
 	@NotBlank(message = "Nome não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@Column (nullable = false)
+	@ApiModelProperty(value = "Nome de categoria", required = true)
 	private String nome;
 	
 	@NotBlank(message = "Descrição não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@Column (nullable = false)
+	@ApiModelProperty(value = "Descrição de categoria", required = true)
 	private String descricao;
 
 	public Categoria() {

@@ -5,6 +5,7 @@ import com.grupo4.projetofinalapi.entities.Pedido;
 import com.grupo4.projetofinalapi.enums.StatusPedido;
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
 
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.EnumType;
@@ -20,24 +21,31 @@ import java.util.Objects;
 
 public class PedidoDTO {
 
+	@ApiModelProperty(value = "Identificador único do pedido")
 	private Long id;
 
 	@PastOrPresent(message = "Data do pedido deve ser igual ou anterior a hoje", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
+	@ApiModelProperty(value = "Data de finalização do pedido")
 	private LocalDateTime dataPedido;
 	
 	@NotNull(message = "Frete não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@PositiveOrZero(message = "Frete não pode ser negativo", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
+	@ApiModelProperty(value = "Frete do pedido", required = true)
 	private Double fretePedido;
 	
 	@Enumerated (EnumType.STRING)
+	@ApiModelProperty(value = "Status do pedido")
 	private StatusPedido statusPedido;
 
+	@ApiModelProperty(value = "Comprador do pedido")
 	private UsuarioDTO comprador;
 
 	@NotNull(message = "Vendedor não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
+	@ApiModelProperty(value = "Vendedor do pedido", required = true)
 	private UsuarioDTO vendedor;
 	
 	@NotNull(message = "Lista de produtos não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
+	@ApiModelProperty(value = "Lista de item de pedido do pedido", required = true)
 	private List<ItemPedidoDTO> listaItemPedido;
 
 	public PedidoDTO() {

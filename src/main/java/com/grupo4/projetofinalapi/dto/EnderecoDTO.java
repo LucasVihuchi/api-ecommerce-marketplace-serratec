@@ -1,19 +1,42 @@
 package com.grupo4.projetofinalapi.dto;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Objects;
 
 public class EnderecoDTO {
 
+	@ApiModelProperty(value = "CEP do endereço", required = true)
 	private String cep;
+
+	@ApiModelProperty(value = "Logradouro do endereço", required = true)
 	private String logradouro;
+
+	@ApiModelProperty(value = "Complemento do endereço")
 	private String complemento;
+
+	@ApiModelProperty(value = "Bairro do endereço")
 	private String bairro;
+
+	@ApiModelProperty(value = "Localidade do endereço", required = true)
 	private String localidade;
+
+	@ApiModelProperty(value = "UF do endereço", required = true)
 	private String uf;
+
+	@ApiModelProperty(value = "Registro IBGE do endereço", required = true)
 	private String ibge;
+
+	@ApiModelProperty(value = "GIA do endereço", required = true)
 	private String gia;
+
+	@ApiModelProperty(value = "DDD do endereço", required = true)
 	private String ddd;
+
+	@ApiModelProperty(value = "Siafi do endereço", required = true)
 	private String siafi;
+
+	@ApiModelProperty(value = "Erro do endereço", required = true)
 	private boolean erro;
 	
 	public EnderecoDTO(){

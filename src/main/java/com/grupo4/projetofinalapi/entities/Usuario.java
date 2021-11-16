@@ -2,6 +2,7 @@ package com.grupo4.projetofinalapi.entities;
 
 import com.grupo4.projetofinalapi.enums.Sexo;
 import com.grupo4.projetofinalapi.validations.ValidDataNascimento;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -26,67 +27,83 @@ public class Usuario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column (name = "cod_usuario",nullable = false, columnDefinition = "serial")
+	@ApiModelProperty(value = "Identificador único de usuário")
 	private Long id;
 	
 	@NotBlank
 	@Column (nullable = false)
+	@ApiModelProperty(value = "Nome do usuário", required = true)
 	private String nome;
 	
 	@NotBlank
 	@Column (nullable = false)
+	@ApiModelProperty(value = "Sobrenome do usuário", required = true)
 	private String sobrenome;
 	
 	@NotNull
 	@Enumerated (EnumType.STRING)
 	@Column (nullable = false)
+	@ApiModelProperty(value = "Sexo do usuário", required = true)
 	private Sexo sexo;
 	
 	@NotBlank
 	@Column (nullable = false, length = 13)
+	@ApiModelProperty(value = "Telefone principal do usuário", required = true)
 	private String telefonePrincipal;
 
 	@Column (length = 13)
+	@ApiModelProperty(value = "Telefone secundário do usuário")
 	private String telefoneSecundario;
 	
 	@NotBlank
 	@Column (nullable = false, unique = true)
+	@ApiModelProperty(value = "Nome de usuário do usuário", required = true)
 	private String nomeUsuario;
 	
 	@NotBlank
 	@Column (nullable = false, length = 35)
+	@ApiModelProperty(value = "Senha do usuário", required = true)
 	private String senhaUsuario;
 	
 	@NotBlank
 	@Email
 	@Column (nullable = false, unique = true)
+	@ApiModelProperty(value = "Email do usuário", required = true)
 	private String email;
 	
 	@NotNull
 	@CPF
 	@Column (nullable = false, length = 11, unique = true)
+	@ApiModelProperty(value = "CPF do usuário", required = true)
 	private String cpf;
 	
 	@NotNull
 	@ValidDataNascimento
 	@Past
 	@Column (nullable = false)
+	@ApiModelProperty(value = "Data de nascimento do usuário", required = true)
 	private LocalDate dataNascimento;
 	
 	@NotNull
 	@Column (nullable = false)
+	@ApiModelProperty(value = "Identificador se o usuário é vendedor", required = true)
 	private boolean ehVendedor;
 	
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn (name = "cod_endereco", nullable = false, unique = true, columnDefinition = "int4")
+	@ApiModelProperty(value = "Endereço do usuário", required = true)
 	private Endereco endereco;
 	
 	@OneToMany (mappedBy = "vendedor")
+	@ApiModelProperty(value = "Lista de produtos do usuário")
 	private List<Produto> listaProdutos;
 	
 	@OneToMany (mappedBy = "comprador")
+	@ApiModelProperty(value = "Lista de pedidos de compra do usuário")
 	private List<Pedido> listaPedidosFeitos;
 		
 	@OneToMany (mappedBy = "vendedor")
+	@ApiModelProperty(value = "Lista de pedidos de venda do usuário")
 	private List<Pedido> listaPedidosRecebidos;
 
 	
