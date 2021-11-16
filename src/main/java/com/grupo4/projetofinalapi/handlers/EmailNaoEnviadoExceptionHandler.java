@@ -1,9 +1,7 @@
 package com.grupo4.projetofinalapi.handlers;
 
 import com.grupo4.projetofinalapi.entities.ErroRespostaBody;
-import com.grupo4.projetofinalapi.exceptions.CategoriaExistenteException;
 import com.grupo4.projetofinalapi.exceptions.EmailNaoEnviadoException;
-import com.grupo4.projetofinalapi.exceptions.ProdutoExistenteException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

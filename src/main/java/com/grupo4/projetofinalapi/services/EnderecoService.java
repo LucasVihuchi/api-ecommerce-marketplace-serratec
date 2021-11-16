@@ -56,4 +56,29 @@ public class EnderecoService {
         return endereco;
     }
 
+    public void verificaEndereco(Endereco endereco) {
+        if(endereco.getLogradouro() == null || endereco.getLogradouro().equals("")) {
+            throw new EnderecoInvalidoException("Logradouro não ficar em branco ou nulo");
+        }
+        if(endereco.getCep() == null || endereco.getCep().equals("")) {
+            throw new EnderecoInvalidoException("CEP não ficar em branco ou nulo");
+        }
+        if(endereco.getBairro() == null || endereco.getBairro().equals("")) {
+            throw new EnderecoInvalidoException("Bairro não ficar em branco ou nulo");
+        }
+        if(endereco.getCidade() == null || endereco.getCidade().equals("")) {
+            throw new EnderecoInvalidoException("Cidade não ficar em branco ou nulo");
+        }
+        if(endereco.getEstado() == null || endereco.getEstado().equals("")) {
+            throw new EnderecoInvalidoException("Estado não ficar em branco ou nulo");
+        }
+        if(endereco.getNumero() < 0) {
+            throw new EnderecoInvalidoException("Número não pode ser negativo");
+        }
+        if(endereco.getComplemento() != null) {
+            if(endereco.getComplemento().equals("")) {
+                throw new EnderecoInvalidoException("Complemento não ficar em branco");
+            }
+        }
+    }
 }

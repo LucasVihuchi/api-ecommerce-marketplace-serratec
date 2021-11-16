@@ -1,18 +1,12 @@
 package com.grupo4.projetofinalapi.services;
 
-import com.grupo4.projetofinalapi.dto.EnderecoDTO;
-import com.grupo4.projetofinalapi.entities.Endereco;
 import com.grupo4.projetofinalapi.entities.Pedido;
 import com.grupo4.projetofinalapi.entities.Usuario;
 import com.grupo4.projetofinalapi.enums.Sexo;
-import com.grupo4.projetofinalapi.exceptions.EnderecoInexistenteException;
-import com.grupo4.projetofinalapi.exceptions.EnderecoInvalidoException;
 import com.grupo4.projetofinalapi.exceptions.UsuarioInexistenteException;
 import com.grupo4.projetofinalapi.repositories.EnderecoRepository;
 import com.grupo4.projetofinalapi.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,8 +29,9 @@ public class UsuarioService {
 	private EnderecoService enderecoService;
 	
 	
-	public Usuario inserirUsuario(Usuario usuarioRecebido){
+	public Usuario inserirUsuario(Usuario usuarioRecebido) {
 		usuarioRecebido.setEndereco(enderecoService.completaEndereco(usuarioRecebido.getEndereco()));
+		enderecoService.verificaEndereco(usuarioRecebido.getEndereco());
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		usuarioRecebido.setSenhaUsuario(passwordEncoder.encode(usuarioRecebido.getSenhaUsuario()));
 		return usuarioRepository.saveAndFlush(usuarioRecebido);
@@ -81,6 +76,10 @@ public class UsuarioService {
 			enderecoService.atualizarEndereco(usuarioBD.getEndereco().getId(), usuario.getEndereco());
 		}
 		return usuarioBD;
+	}
+
+	public List<Usuario> obterUsuarioPorEmailCPFOuNomeUsuario(String email, String cpf, String nomeUsuario) {
+		return usuarioRepository.findAllByEmailOrCpfOrNomeUsuario(email, cpf, nomeUsuario);
 	}
 
 	public List<Pedido> obterListaPedidosPorComprador(UserDetails usuarioAutenticado){

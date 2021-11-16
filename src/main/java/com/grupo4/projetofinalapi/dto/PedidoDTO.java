@@ -1,16 +1,12 @@
 package com.grupo4.projetofinalapi.dto;
 
-import com.grupo4.projetofinalapi.entities.ItemPedido;
 import com.grupo4.projetofinalapi.entities.Pedido;
 import com.grupo4.projetofinalapi.enums.StatusPedido;
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
-
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.PositiveOrZero;

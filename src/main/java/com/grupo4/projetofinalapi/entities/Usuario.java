@@ -4,7 +4,6 @@ import com.grupo4.projetofinalapi.enums.Sexo;
 import com.grupo4.projetofinalapi.validations.ValidDataNascimento;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.validator.constraints.br.CPF;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -94,15 +93,15 @@ public class Usuario {
 	@ApiModelProperty(value = "Endereço do usuário", required = true)
 	private Endereco endereco;
 	
-	@OneToMany (mappedBy = "vendedor")
+	@OneToMany (mappedBy = "vendedor", orphanRemoval = true)
 	@ApiModelProperty(value = "Lista de produtos do usuário")
 	private List<Produto> listaProdutos;
 	
-	@OneToMany (mappedBy = "comprador")
+	@OneToMany (mappedBy = "comprador", orphanRemoval = true)
 	@ApiModelProperty(value = "Lista de pedidos de compra do usuário")
 	private List<Pedido> listaPedidosFeitos;
 		
-	@OneToMany (mappedBy = "vendedor")
+	@OneToMany (mappedBy = "vendedor", orphanRemoval = true)
 	@ApiModelProperty(value = "Lista de pedidos de venda do usuário")
 	private List<Pedido> listaPedidosRecebidos;
 

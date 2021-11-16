@@ -2,12 +2,9 @@ package com.grupo4.projetofinalapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.grupo4.projetofinalapi.entities.ItemPedido;
-import com.grupo4.projetofinalapi.entities.Pedido;
-import com.grupo4.projetofinalapi.entities.Produto;
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;

@@ -7,12 +7,8 @@ import com.grupo4.projetofinalapi.entities.Produto;
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
 import com.grupo4.projetofinalapi.services.FotoProdutoService;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.persistence.Transient;
 import javax.validation.constraints.*;
 import java.net.URI;
 import java.time.LocalDate;

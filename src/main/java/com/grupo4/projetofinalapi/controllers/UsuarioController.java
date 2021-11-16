@@ -3,6 +3,7 @@ package com.grupo4.projetofinalapi.controllers;
 import com.grupo4.projetofinalapi.dto.PedidoDTO;
 import com.grupo4.projetofinalapi.dto.UsuarioDTO;
 import com.grupo4.projetofinalapi.entities.Usuario;
+import com.grupo4.projetofinalapi.exceptions.UsuarioExistenteException;
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
 import com.grupo4.projetofinalapi.services.PedidoService;
 import com.grupo4.projetofinalapi.services.UsuarioService;
@@ -35,10 +36,15 @@ public class UsuarioController {
 	@ApiOperation(value = "Insere um usuário", notes = "Inserir usuário")
 	@ApiResponses(value = {
 			@ApiResponse(code = 201, message = "Usuário adicionado"),
-			@ApiResponse(code = 400, message = "Inconsistência nos dados de usuário e endereço"),
+			@ApiResponse(code = 400, message = "Inconsistência nos dados de usuário e endereço ou usuário já existe"),
 	})
 	public ResponseEntity<Object> criarUsuario(@Validated(GruposValidacao.ValidadorPost.class) @RequestBody UsuarioDTO usuarioDTO){
-	
+
+		List<Usuario> listaUsuariosBD = usuarioService.obterUsuarioPorEmailCPFOuNomeUsuario(usuarioDTO.getEmail(), usuarioDTO.getCpf(), usuarioDTO.getNomeUsuario());
+		if(listaUsuariosBD.size() != 0) {
+			throw new UsuarioExistenteException("Email, CPF e/ou nome de usuário já está existe no sistema");
+		}
+
 		Usuario usuario = usuarioDTO.converterParaUsuario();
 		usuario = usuarioService.inserirUsuario(usuario);
 		

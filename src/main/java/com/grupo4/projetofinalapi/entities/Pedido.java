@@ -2,12 +2,10 @@ package com.grupo4.projetofinalapi.entities;
 
 import com.grupo4.projetofinalapi.enums.StatusPedido;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -62,7 +60,7 @@ public class Pedido {
 	@ApiModelProperty(value = "Vendedor do pedido", required = true)
 	private Usuario vendedor;
 	
-	@OneToMany (mappedBy = "pedido", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany (mappedBy = "pedido", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@ApiModelProperty(value = "Lista de itens do pedido", required = true)
 	private List<ItemPedido> listaItemPedido;
 

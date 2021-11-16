@@ -1,7 +1,6 @@
 package com.grupo4.projetofinalapi.handlers;
 
 import com.grupo4.projetofinalapi.entities.ErroRespostaBody;
-import com.grupo4.projetofinalapi.exceptions.EmailNaoEnviadoException;
 import com.grupo4.projetofinalapi.exceptions.IdNaoFornecidoException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -2,7 +2,6 @@ package com.grupo4.projetofinalapi.entities;
 
 import com.grupo4.projetofinalapi.groups.GruposValidacao;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;

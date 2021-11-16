@@ -32,12 +32,12 @@ public class UsuarioDTO {
 
 	@NotBlank(message = "Telefone principal não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
 	@Size(min = 8, max = 13, message = "Telefone deve conter entre {min} e {max} dígitos", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
-	// TODO Tentar usar regex para evitar letras
-	// TODO Evitar bater dados duplicados no banco
+	@Pattern(regexp = "^[0-9]{8,13}$", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class}, message = "Telefone principal do usuário deve conter de 8 até 13 números")
 	@ApiModelProperty(value = "Telefone principal do usuário", required = true)
 	private String telefonePrincipal;
 
 	@Size(min = 8, max = 13, message = "Telefone deve conter entre {min} e {max} dígitos", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
+	@Pattern(regexp = "^[0-9]{8,13}$", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class}, message = "Telefone secundário do usuário deve conter de 8 até 13 números")
 	@ApiModelProperty(value = "Telefone secundário do usuário")
 	private String telefoneSecundario;
 

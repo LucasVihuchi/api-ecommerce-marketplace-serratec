@@ -36,20 +36,17 @@ public class Endereco {
 	@Column
 	@ApiModelProperty(value = "Complemento do endereço")
 	private String complemento;
-	
-	@NotBlank(message = "Bairro não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
+
 	@Column (nullable = false)
-	@ApiModelProperty(value = "Bairro do endereço", required = true)
+	@ApiModelProperty(value = "Bairro do endereço")
 	private String bairro;
-	
-	@NotBlank(message = "Cidade não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
+
 	@Column (nullable = false)
-	@ApiModelProperty(value = "Cidade do endereço", required = true)
+	@ApiModelProperty(value = "Cidade do endereço")
 	private String cidade;
-	
-	@NotBlank(message = "Estado não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
+
 	@Column (nullable = false)
-	@ApiModelProperty(value = "Estado do endereço", required = true)
+	@ApiModelProperty(value = "Estado do endereço")
 	private String estado;
 
 	public Endereco() {

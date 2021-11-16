@@ -53,6 +53,10 @@ public class PedidoService {
 
 		pedido.setVendedor(vendedor);
 
+		if(comprador.getId().equals(vendedor.getId())) {
+			throw new PedidoInconsistenteException("Comprador e vendedor não podem ser a mesma pessoa");
+		}
+
 		if(pedido.getListaItemPedido().size() == 0) {
 			throw new PedidoInconsistenteException("Pedido deve conter produtos");
 		}
@@ -85,9 +89,16 @@ public class PedidoService {
 			throw new PedidoJaFinalizadoException("Pedido associado ao id " + id + " já foi finalizado");
 		}
 
+		if(pedido.getListaItemPedido() != null) {
+			if(pedido.getListaItemPedido().size() == 0) {
+				throw new PedidoInconsistenteException("Lista de itens do pedido não pode ser declarada vazia");
+			}
+		}
+
 		if(pedido.getFretePedido() != null) {
 			pedidoBD.setFretePedido(pedido.getFretePedido());
 		}
+
 		if(pedido.getListaItemPedido() != null && pedido.getListaItemPedido().size() != 0) {
 			itemPedidoService.verificaListaItemPedido(pedidoBD.getVendedor(), pedido.getListaItemPedido());
 			pedido.setListaItemPedido(insereIdPedidoListaItemPedidos(pedidoBD.getId(), pedido));

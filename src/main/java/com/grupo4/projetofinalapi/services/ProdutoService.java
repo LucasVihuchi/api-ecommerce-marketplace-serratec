@@ -38,7 +38,7 @@ public class ProdutoService {
 	}
 	
 	public List<Produto> obterProdutosPorNome(String nome){
-		return produtoRepository.findAllAlikeByNomeIgnoreCase(nome);
+		return produtoRepository.findAllByNomeContaining(nome);
 	}
 
 	public Produto inserirProduto(Produto produto, MultipartFile file, UserDetails usuarioAutenticado) throws IOException {
@@ -47,7 +47,7 @@ public class ProdutoService {
 		Usuario vendedor = usuarioRepository.findByNomeUsuario(usuarioAutenticado.getUsername())
 				.orElseThrow(() -> new UsuarioInexistenteException("Usuário associado ao nome de usuário '" + usuarioAutenticado.getUsername() + "' não existe"));
 
-		List<Produto> listaProdutos = produtoRepository.findAllAlikeByNomeIgnoreCase(produto.getNome());
+		List<Produto> listaProdutos = produtoRepository.findAllByNomeContaining(produto.getNome());
 		for(Produto produtoAtual : listaProdutos) {
 			boolean vendedorIgual = produtoAtual.getVendedor().getId().equals(vendedor.getId());
 			boolean nomeProdutoIgual = produtoAtual.getNome().equalsIgnoreCase(produto.getNome());
