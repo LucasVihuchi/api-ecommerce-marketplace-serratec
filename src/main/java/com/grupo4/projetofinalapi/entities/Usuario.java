@@ -6,10 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -60,7 +57,7 @@ public class Usuario {
 	private String nomeUsuario;
 	
 	@NotBlank
-	@Column (nullable = false, length = 35)
+	@Column (nullable = false, length = 128)
 	@ApiModelProperty(value = "Senha do usuário", required = true)
 	private String senhaUsuario;
 	

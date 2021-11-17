@@ -46,6 +46,7 @@ public class UsuarioDTO {
 	private String nomeUsuario;
 
 	@NotBlank(message = "Senha não pode ficar em branco ou nulo", groups = {GruposValidacao.ValidadorPost.class})
+	@Size(min = 8, max = 35, message = "Senha deve conter entre {min} e {max} caracteres", groups = {GruposValidacao.ValidadorPost.class, GruposValidacao.ValidadorPut.class})
 	@ApiModelProperty(value = "Senha do usuário", required = true)
 	private String senhaUsuario;
 
