@@ -19,15 +19,24 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
+/** Classe controller para comunicação externa por outras aplicações com a entidade pedido
+ */
 @RestController
 @RequestMapping("api/v1/pedidos")
 public class PedidoController {
+
 	@Autowired
 	private PedidoService pedidoService;
 
 	@Autowired
 	private ItemPedidoService itemPedidoService;
-	
+
+	/** Método para realizar um pedido de compra
+	 *
+	 * @param pedidoDTO dados do pedido que será inserido no banco
+	 * @param usuarioAutenticado credenciais do usuário que irá realizar o pedido de compra
+	 * @return ResponseEntity com os dados do pedido inserido, dos produtos, do comprador e vendedor no corpo da resposta
+	 */
 	@PostMapping
 	@PreAuthorize("hasRole('ROLE_usuario')")
 	@ApiOperation(value = "Insere um pedido", notes = "Inserir pedido")
@@ -50,6 +59,13 @@ public class PedidoController {
 		return ResponseEntity.created(uri).body(new PedidoDTO(pedido));
 	}
 
+	/** Método para atualizar um pedido de compra ainda não finalizado
+	 *
+	 * @param id id do pedido que será atualizado
+	 * @param pedidoDTO dados do pedido que será inserido no banco
+	 * @param usuarioAutenticado credenciais do usuário que irá atualizar o pedido de compra
+	 * @return ResponseEntity com os dados do pedido atualizado, dos produtos, do comprador e vendedor no corpo da resposta
+	 */
 	@PutMapping("{id}")
 	@PreAuthorize("hasRole('ROLE_usuario')")
 	@ApiOperation(value = "Atualiza um pedido", notes = "Atualizar pedido")
@@ -70,6 +86,12 @@ public class PedidoController {
 		return ResponseEntity.ok().body(new PedidoDTO(pedido));
 	}
 
+	/** Método para finalizar um pedido
+	 *
+	 * @param id id do pedido que será finalizado
+	 * @param usuarioAutenticado credenciais do usuário que irá finalizar o pedido de compra
+	 * @return ResponseEntity com os dados do pedido finalizado, dos produtos, do comprador e vendedor no corpo da resposta
+	 */
 	@PutMapping("{id}/finalizar")
 	@PreAuthorize("hasRole('ROLE_usuario')")
 	@ApiOperation(value = "Finaliza um pedido", notes = "Finalizar pedido")

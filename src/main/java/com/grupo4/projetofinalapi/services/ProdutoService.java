@@ -21,6 +21,8 @@ import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 
+/** Classe service realizar a interface entre o controller e repository de produto
+ */
 @Service
 public class ProdutoService {
 	
@@ -33,14 +35,31 @@ public class ProdutoService {
 	@Autowired
 	private CategoriaRepository categoriaRepository;
 
+	/** Método para obter todos os produtos do banco de dados
+	 *
+	 * @return List com todos os produtos no banco de dados
+	 */
 	public List<Produto> obterProdutos(){
 		return produtoRepository.findAll();
 	}
-	
+
+	/** Método para obter todos os produtos que correspondem parcialmente ou totalmente ao nome fornecido
+	 *
+	 * @param nome nome ou parte do nome do produto
+	 * @return List com os produtos compatíveis no banco
+	 */
 	public List<Produto> obterProdutosPorNome(String nome){
 		return produtoRepository.findAllByNomeContaining(nome);
 	}
 
+	/** Método para inserir um produto e sua foto do produto no banco de dados
+	 *
+	 * @param produto produto a ser inserido
+	 * @param file arquivo da foto a ser inserido
+	 * @param usuarioAutenticado credenciais do usuário autenticado
+	 * @return Produto inserido no banco de dados
+	 * @throws IOException caso ocorra um erro na manipulação do arquivo da foto
+	 */
 	public Produto inserirProduto(Produto produto, MultipartFile file, UserDetails usuarioAutenticado) throws IOException {
 		validaProdutoPost(produto);
 
@@ -81,6 +100,10 @@ public class ProdutoService {
 		return produtoRepository.saveAndFlush(produto);
 	}
 
+	/** Método para validar o produto inserido. Esse método é necessário, pois as validações do Spring não são compatíveis com request param
+	 *
+	 * @param produto produto a ser validado
+	 */
 	public void validaProdutoPost(Produto produto) {
 		if(produto.getNome() == null || produto.getNome().equals("")) {
 			throw new ProdutoInconsistenteException("Nome não pode ficar em branco ou ser nulo");

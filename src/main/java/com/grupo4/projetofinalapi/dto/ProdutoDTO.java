@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/** DTO da entidade produto
+ */
 @JsonIgnoreProperties(value = "urlFoto", allowGetters = true)
 public class ProdutoDTO {
 
@@ -76,6 +78,10 @@ public class ProdutoDTO {
         this.urlFoto = urlFoto;
     }
 
+    /** Construtor que constrói um produtoDTO a partir de um produto
+     *
+     * @param produto produto que será convertido
+     */
     public ProdutoDTO(Produto produto) {
         this.id = produto.getId();
         this.nome = produto.getNome();
@@ -89,11 +95,12 @@ public class ProdutoDTO {
         this.urlFoto = gerarStringUrlFoto(this.id);
     }
 
+    /** Método para gerar a url da foto de um produto
+     *
+     * @param idProduto id do produto que será usado para gerar a URL
+     * @return String com a url gerada da foto
+     */
     public static String gerarStringUrlFoto(long idProduto) {
-        return gerarUrlFoto(idProduto);
-    }
-
-    public static String gerarUrlFoto(long idProduto) {
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("/api/v1/produtos/{id}/foto")
@@ -103,6 +110,10 @@ public class ProdutoDTO {
         return uri.toString();
     }
 
+    /** Método para converter um produtoDTO em produto
+     *
+     * @return produto convertido
+     */
     public Produto converterParaProduto() {
         FotoProdutoService fotoProdutoService = SpringContext.getBean(FotoProdutoService.class);
         Produto produto = new Produto();
@@ -123,6 +134,11 @@ public class ProdutoDTO {
         return produto;
     }
 
+    /** Método para converter um List de produtos em um List de produtosDTO
+     *
+     * @param listaProdutos List de produtos que serão convertidos
+     * @return List de produtosDTO convertido
+     */
     public static List<ProdutoDTO> converterParaListaProdutosDTO(List<Produto> listaProdutos) {
         List<ProdutoDTO> listaProdutosDTO = new ArrayList<>();
         for(Produto produtoAtual : listaProdutos) {

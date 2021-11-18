@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+/** Classe service para realizar a interface entre os controllers e o repository de endereço
+ */
 @Service
 public class EnderecoService {
 
@@ -21,6 +23,12 @@ public class EnderecoService {
     @Autowired
     private ConsultaCepService consulta;
 
+    /** Método para atualizar os dados de endereço do usuário no banco de dados
+     *
+     * @param id id do endereço a ser atualizado
+     * @param endereco endereco com dados a serem modificados no banco
+     * @return Endereco do banco de dados com os dados modificados
+     */
     @Transactional
     public Endereco atualizarEndereco(Long id, Endereco endereco) {
         Endereco enderecoBD = enderecoRepository.findById(id)
@@ -44,6 +52,11 @@ public class EnderecoService {
         return enderecoBD;
     }
 
+    /** Método para completar os dados de bairro, cidade e estado de um endereço fornecido
+     *
+     * @param endereco endereco a ser completado
+     * @return Endereco com os dados atualizados
+     */
     public Endereco completaEndereco(Endereco endereco) {
         if(endereco.getCep() == null || endereco.getCep().length() != 8) {
             throw new EnderecoInvalidoException("CEP '" + endereco.getCep() + "' é inválido");
@@ -56,6 +69,10 @@ public class EnderecoService {
         return endereco;
     }
 
+    /** Método para verificar se os dados de endereço fornecidos são válidos
+     *
+     * @param endereco endereco a ser verificado
+     */
     public void verificaEndereco(Endereco endereco) {
         if(endereco.getLogradouro() == null || endereco.getLogradouro().equals("")) {
             throw new EnderecoInvalidoException("Logradouro não ficar em branco ou nulo");

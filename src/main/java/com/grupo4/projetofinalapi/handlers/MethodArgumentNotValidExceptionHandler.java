@@ -13,9 +13,16 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.ArrayList;
 import java.util.List;
 
+/** Classe para capturar exceções do tipo MethodArgumentNotValidException e fornecer tratamento customizado
+ */
 @ControllerAdvice
 public class MethodArgumentNotValidExceptionHandler extends ResponseEntityExceptionHandler{
 
+	/** Método para capturar exceções do tipo MethodArgumentNotValidException e fornecer tratamento customizado
+	 *
+	 * @param ex exceção que foi capturada pelo handler
+	 * @return ResponseEntity com o detalhamento da exceção no corpo da resposta
+	 */
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {

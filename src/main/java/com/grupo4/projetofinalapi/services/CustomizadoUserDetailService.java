@@ -14,12 +14,19 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Classe para definir um método customizado de busca de usuário para autenticação
+ */
 @Service
 public class CustomizadoUserDetailService implements UserDetailsService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    /** Método para customizar a busca de usuário no banco de dados e seu nível de autorização
+     *
+     * @param nomeUsuario nome de usuário fornecido na autenticação
+     * @return User com nome de usuário, senha e nível de autorização do usuário.
+     */
     @Override
     public UserDetails loadUserByUsername(String nomeUsuario) {
 

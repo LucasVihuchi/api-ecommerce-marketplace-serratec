@@ -10,9 +10,15 @@ import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
+/** Classe para configuração da documentação com Swagger
+ */
 @Configuration
 public class SpringFoxConfig {
 
+    /** Método para configurar o Swagger
+     *
+     * @return Docket que configura o Swagger, seus endpoints e models que serão expostos na documentação
+     */
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -24,6 +30,10 @@ public class SpringFoxConfig {
                 .useDefaultResponseMessages(false);
     }
 
+    /** Método para compor o cabeçalho da página do Swagger
+     *
+     * @return ApiInfo com informações que compõem o cabeçalho
+     */
     private ApiInfo apiInfo() {
         ApiInfo apiInfo = new ApiInfoBuilder()
                 .title("API Grupo 4 - Projeto final")

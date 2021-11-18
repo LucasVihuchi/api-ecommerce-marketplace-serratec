@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/** DTO da entidade item_pedido
+ */
 public class ItemPedidoDTO {
 
     @ApiModelProperty(value = "Identificador único do item do pedido")
@@ -46,6 +48,10 @@ public class ItemPedidoDTO {
         this.produto = produto;
     }
 
+    /** Construtor que constrói um ItemPedidoDTO a partir de um ItemPedido
+     *
+     * @param itemPedido ItemPedido que será convertido
+     */
     public ItemPedidoDTO(ItemPedido itemPedido) {
         ItemPedidoDTO itemPedidoDTO = new ItemPedidoDTO();
         this.id = itemPedido.getId();
@@ -55,6 +61,10 @@ public class ItemPedidoDTO {
 
     }
 
+    /** Método para converter um ItemPedidoDTO para ItemPedido
+     *
+     * @return ItemPedido convertido
+     */
     public ItemPedido converterParaItemPedido() {
         ItemPedido itemPedido = new ItemPedido();
         itemPedido.setId(this.id);
@@ -120,6 +130,11 @@ public class ItemPedidoDTO {
         return listaItemPedidoDTO;
     }
 
+    /** Método para converter um List de ItemPedido em um List de ItemPedidoDTO
+     *
+     * @param listaItemPedidoDTO List de ItemPedidoDTO que serão convertidos
+     * @return List de ItemPedido convertido
+     */
     public static List<ItemPedido> converterParaListaItemPedido(List<ItemPedidoDTO> listaItemPedidoDTO) {
         List<ItemPedido> listaItemPedido = new ArrayList<>();
         for(ItemPedidoDTO itemPedidoDTO : listaItemPedidoDTO) {

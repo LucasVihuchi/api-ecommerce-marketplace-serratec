@@ -20,6 +20,8 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/** Classe service realizar a interface entre os controllers e o repository de pedido
+ */
 @Service
 public class PedidoService {
 
@@ -38,6 +40,12 @@ public class PedidoService {
 	@Autowired
 	private ItemPedidoService itemPedidoService;
 
+	/** Método para inserir um novo pedido no banco de dados
+	 *
+	 * @param pedido pedido a ser inserido
+	 * @param usuarioAutenticado credenciais do usuário autenticado
+	 * @return Pedido que foi inserido no banco de dados
+	 */
 	public Pedido inserirPedido(Pedido pedido, UserDetails usuarioAutenticado) {
 		if(pedido.getVendedor().getId() == null) {
 			throw new IdNaoFornecidoException("Id do vendedor não foi fornecido");
@@ -73,6 +81,13 @@ public class PedidoService {
 		
 	}
 
+	/** Método para atualizar um pedido no banco de dados
+	 *
+	 * @param id id do pedido a ser atualizado
+	 * @param pedido pedido com os novos dados do pedido
+	 * @param usuarioAutenticado credenciais do usuário autenticado
+	 * @return Pedido com os dados atualizados no banco de dados
+	 */
 	@Transactional
 	public Pedido atualizarPedido(Long id, Pedido pedido, UserDetails usuarioAutenticado) {
 		Pedido pedidoBD = pedidoRepository.findById(id)
@@ -109,6 +124,12 @@ public class PedidoService {
 		return pedidoBD;
 	}
 
+	/** Método para finalizar um pedido
+	 *
+	 * @param id id do pedido a ser finalizado
+	 * @param usuarioAutenticado credenciais do usuário autenticado
+	 * @return Pedido que foi finalizado
+	 */
 	@Transactional
 	public Pedido finalizarPedido(Long id, UserDetails usuarioAutenticado) {
 		Pedido pedidoBD = pedidoRepository.findById(id)
@@ -139,6 +160,11 @@ public class PedidoService {
 		return pedidoBD;
 	}
 
+	/** Método para atualizar os preços dos produtos no List de ItemPedido
+	 *
+	 * @param listaItemPedido List de ItemPedido a ser atualizado
+	 * @return List de ItemPedido com os dados atualizados
+	 */
 	public List<ItemPedido> atualizaPrecosItemPedido(List<ItemPedido> listaItemPedido){
 		int indice;
 		for(indice = 0; indice < listaItemPedido.size(); indice++) {
@@ -153,6 +179,10 @@ public class PedidoService {
 		return listaItemPedido;
 	}
 
+	/** Método para atualizar o estoque de produtos no banco de dados
+	 *
+	 * @param listaItemPedido List de ItemPedido com os produtos a serem subtraídos
+	 */
 	@Transactional
 	public void atualizaQtdEstoque(List<ItemPedido> listaItemPedido) {
 		for (ItemPedido itemPedidoAtual : listaItemPedido) {
@@ -165,6 +195,12 @@ public class PedidoService {
 		}
 	}
 
+	/** Método para inserir o id do pedido em uma lista de ItemPedido
+	 *
+	 * @param id id do pedido
+	 * @param pedido pedido que terá sua lista de ItemPedido atualizada
+	 * @return List de ItemPedido atualizado
+	 */
 	public List<ItemPedido> insereIdPedidoListaItemPedidos(Long id, Pedido pedido){
 		for (ItemPedido itemPedidoAtual : pedido.getListaItemPedido()) {
 			itemPedidoAtual.setPedido(pedido);

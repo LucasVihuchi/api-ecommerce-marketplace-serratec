@@ -7,6 +7,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
+/** Classe que representa a entidade categoria do banco de dados
+ */
 @Entity
 public class Categoria {
 	

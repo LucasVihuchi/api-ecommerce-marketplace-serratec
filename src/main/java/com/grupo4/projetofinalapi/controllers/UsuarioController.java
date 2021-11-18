@@ -22,6 +22,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+/** Classe controller para comunicação externa por outras aplicações com a entidade usuário
+ */
 @RestController
 @RequestMapping("/api/v1/usuarios")
 public class UsuarioController {
@@ -32,6 +34,11 @@ public class UsuarioController {
 	@Autowired
 	private PedidoService pedidoService;
 
+	/** Método para inserir um usuário no banco
+	 *
+	 * @param usuarioDTO usuário a ser inserido no banco de dados
+	 * @return ResponseEntity com usuário inserido no banco de dados no corpo da resposta
+	 */
 	@PostMapping
 	@ApiOperation(value = "Insere um usuário", notes = "Inserir usuário")
 	@ApiResponses(value = {
@@ -56,7 +63,12 @@ public class UsuarioController {
 		
 		return ResponseEntity.created(uri).body(new UsuarioDTO(usuario));
 	}
-	
+
+	/** Método para deletar usuário cadastrado no banco de dados
+	 *
+	 * @param usuarioAutenticado credenciais do usuário que será deletado
+	 * @return ResponseEntity com status code 200 informando que foi deletado com sucesso
+	 */
 	@DeleteMapping
 	@PreAuthorize("hasRole('ROLE_usuario')")
 	@ApiOperation(value = "Deleta um usuário", notes = "Deletar usuário")
@@ -69,7 +81,13 @@ public class UsuarioController {
 		usuarioService.deletarUsuario(usuarioAutenticado);
 		return ResponseEntity.ok().build();
 	}
-	
+
+	/** Método para atualizar dados do usuário no banco de dados
+	 *
+	 * @param usuarioDTO usuário com os dados a serem alterados
+	 * @param usuarioAutenticado credenciais do usuário que terá seus dados atualizados
+	 * @return ResponseEntity com o usuário atualizado no banco de dados no corpo da resposta
+	 */
 	@PutMapping
 	@PreAuthorize("hasRole('ROLE_usuario')")
 	@ApiOperation(value = "Atualiza um usuário", notes = "Atualizar usuário")
@@ -85,6 +103,11 @@ public class UsuarioController {
 		return ResponseEntity.ok().body(new UsuarioDTO(usuario));
 	}
 
+	/** Método para obter a lista de pedidos realizados por um usuário
+	 *
+	 * @param usuarioAutenticado credenciais do usuário que terá seus pedidos retornados
+	 * @return ResponseEntity com List de pedidos realizados pelo usuário no corpo da resposta
+	 */
 	@GetMapping("compras")
 	@PreAuthorize("hasRole('ROLE_usuario')")
 	@ApiOperation(value = "Retorna todos os pedidos de compras do usuário", notes = "Retornar pedidos de compras do usuário")
@@ -98,6 +121,11 @@ public class UsuarioController {
 		return ResponseEntity.ok().body(listaPedidosDTO);
 	}
 
+	/** Método para obter a lista de pedidos recebidos por um usuário
+	 *
+	 * @param usuarioAutenticado credenciais do usuário que terá seus pedidos retornados
+	 * @return ResponseEntity com List de pedidos recebidos pelo usuário no corpo da resposta
+	 */
 	@GetMapping("vendas")
 	@PreAuthorize("hasRole('ROLE_usuario')")
 	@ApiOperation(value = "Retorna todos os pedidos de vendas do usuário", notes = "Retornar pedidos de vendas do usuário")

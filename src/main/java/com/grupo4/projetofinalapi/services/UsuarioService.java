@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/** Classe service realizar a interface entre o controller e repository de usuário
+ */
 @Service
 public class UsuarioService {
 
@@ -27,8 +29,12 @@ public class UsuarioService {
 	
 	@Autowired
 	private EnderecoService enderecoService;
-	
-	
+
+	/** Método para inserir um usuário no banco de dados
+	 *
+	 * @param usuarioRecebido usuário a ser inserido
+	 * @return usuário inserido no banco de dados
+	 */
 	public Usuario inserirUsuario(Usuario usuarioRecebido) {
 		usuarioRecebido.setEndereco(enderecoService.completaEndereco(usuarioRecebido.getEndereco()));
 		enderecoService.verificaEndereco(usuarioRecebido.getEndereco());
@@ -36,7 +42,11 @@ public class UsuarioService {
 		usuarioRecebido.setSenhaUsuario(passwordEncoder.encode(usuarioRecebido.getSenhaUsuario()));
 		return usuarioRepository.saveAndFlush(usuarioRecebido);
 	}
-	
+
+	/** Método para deletar um usuário do banco de dados
+	 *
+	 * @param usuarioAutenticado credenciais do usuário autenticado
+	 */
 	public void deletarUsuario(UserDetails usuarioAutenticado) {
 		Optional<Usuario> usuario = usuarioRepository.findByNomeUsuario(usuarioAutenticado.getUsername());
 		if (usuario.isEmpty()) {
@@ -44,7 +54,13 @@ public class UsuarioService {
 		}
 		usuarioRepository.deleteById(usuario.get().getId());
 	}
-	
+
+	/** Método para atualizar os dados de um usuário no banco de dados
+	 *
+	 * @param usuario usuário com os dados a serem atualizados
+	 * @param usuarioAutenticado credenciais do usuário autenticado
+	 * @return Usuário com os dados atualizados no banco de dados
+	 */
 	@Transactional
 	public Usuario atualizarUsuario(Usuario usuario, UserDetails usuarioAutenticado) {
 		Usuario usuarioBD = usuarioRepository.findByNomeUsuario(usuarioAutenticado.getUsername())
@@ -78,16 +94,33 @@ public class UsuarioService {
 		return usuarioBD;
 	}
 
+	/** Método para obter usuários que tenham email, cpf ou nome de usuário compatíveis com os parâmetros passados
+	 *
+	 * @param email email a ser pesquisado
+	 * @param cpf cpf a ser pesquisado
+	 * @param nomeUsuario nome de usuário a ser pesquisado
+	 * @return List de usuários com os usuários compatíveis
+	 */
 	public List<Usuario> obterUsuarioPorEmailCPFOuNomeUsuario(String email, String cpf, String nomeUsuario) {
 		return usuarioRepository.findAllByEmailOrCpfOrNomeUsuario(email, cpf, nomeUsuario);
 	}
 
+	/** Método para obter a lista de pedidos realizados pelo usuário como comprador
+	 *
+	 * @param usuarioAutenticado credenciais do usuário autenticado
+	 * @return List de pedidos realizados pelo usuário
+	 */
 	public List<Pedido> obterListaPedidosPorComprador(UserDetails usuarioAutenticado){
 		Usuario usuarioBD = usuarioRepository.findByNomeUsuario(usuarioAutenticado.getUsername())
 				.orElseThrow(() -> new UsuarioInexistenteException("Usuário associado ao nome de usuário '" + usuarioAutenticado.getUsername() + "' não existe"));
 		return usuarioBD.getListaPedidosFeitos();
 	}
 
+	/** Método para obter a lista de pedidos recebidos pelo usuário como vendedor
+	 *
+	 * @param usuarioAutenticado credenciais do usuário autenticado
+	 * @return List de pedidos recebidos pelo usuário
+	 */
 	public List<Pedido> obterListaPedidosPorVendedor(UserDetails usuarioAutenticado){
 		Usuario usuarioBD = usuarioRepository.findByNomeUsuario(usuarioAutenticado.getUsername())
 				.orElseThrow(() -> new UsuarioInexistenteException("Usuário associado ao nome de usuário '" + usuarioAutenticado.getUsername() + "' não existe"));

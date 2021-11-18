@@ -9,6 +9,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
+/** Classe que representa a entidade endereco do banco de dados
+ */
 @Entity
 public class Endereco {
 
@@ -71,6 +73,10 @@ public class Endereco {
 		this.estado = estado;
 	}
 
+	/** Método para preencher os dados de bairro, cidade e estado recebidos do ViaCEP
+	 *
+	 * @param enderecoDTO enderecoDTO recebido de uma requisição ao ViaCEP
+	 */
 	public void preencherDadosViaCep(EnderecoDTO enderecoDTO) {
 		this.setBairro(enderecoDTO.getBairro());
 		this.setCidade(enderecoDTO.getLocalidade());

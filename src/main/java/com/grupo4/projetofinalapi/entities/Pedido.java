@@ -12,16 +12,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
-/*
- * Precisamos fazer o metodo post, put:
- * - Visualizar todos os pedidos.
- * - Criar um novo Pedido
- * - Editar um pedido com status de não finalizado.
- * - Finalizar um pedido, alterar seu status para finalizado.
- * - Ao finalizar o pedido enviar e-mail para o cliente informando data de envio, data de
-entrega, produtos, quantidades e valor final do pedido.
+/** Classe que representa a entidade pedido do banco de dados
  */
-
 @Entity
 @Table (uniqueConstraints = {
 		@UniqueConstraint (name = "PedidoUnico", columnNames = {"cod_comprador", "cod_vendedor", "data_pedido"})
@@ -159,6 +151,10 @@ public class Pedido {
 				&& Objects.equals(vendedor, other.vendedor);
 	}
 
+	/** Método para gerar o corpo do email de finalização de pedido
+	 *
+	 * @return String formatada em HTML com o corpo da mensagem
+	 */
 	public String gerarTemplateEmail() {
 		DateTimeFormatter formatoDataHoraBrasileiro = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 		DateTimeFormatter formatoDataBraileiro = DateTimeFormatter.ofPattern("dd/MM/yyyy");

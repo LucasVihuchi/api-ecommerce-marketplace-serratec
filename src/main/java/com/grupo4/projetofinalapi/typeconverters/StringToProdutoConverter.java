@@ -10,9 +10,16 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/** Classe para converter uma String em um objeto do tipo Produto
+ */
 @Component
 public class StringToProdutoConverter implements Converter<String, Produto> {
 
+    /** Método para converter uma String em um objeto do tipo Produto
+     *
+     * @param s string que será convertida
+     * @return Produto convertido
+     */
     @Override
     public Produto convert(String s) {
         try {

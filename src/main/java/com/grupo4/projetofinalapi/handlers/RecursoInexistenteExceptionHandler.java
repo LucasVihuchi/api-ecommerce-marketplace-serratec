@@ -10,8 +10,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Classe para capturar exceções geradas pela ausência de um recurso e fornecer tratamento customizado
+ */
 @ControllerAdvice
 public class RecursoInexistenteExceptionHandler {
+
+	/** Método para capturar exceções geradas pela ausência de um recurso e fornecer tratamento customizado
+	 *
+	 * @param ex exceção que foi capturada pelo handler
+	 * @return ResponseEntity com o detalhamento da exceção no corpo da resposta
+	 */
 	@ExceptionHandler(
 			{CategoriaInexistenteException.class,
 			EnderecoInexistenteException.class,

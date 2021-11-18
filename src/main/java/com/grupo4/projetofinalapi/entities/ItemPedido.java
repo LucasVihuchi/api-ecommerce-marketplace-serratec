@@ -10,6 +10,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.Objects;
 
+/** Classe que representa a entidade item_pedido do banco de dados
+ */
 @Entity
 @Table (uniqueConstraints = {
 		@UniqueConstraint (name = "ItemPedidoUnico", columnNames = {"cod_produto", "cod_pedido"})
@@ -40,8 +42,8 @@ public class ItemPedido {
 	@JsonIgnoreProperties({"vendedor"})
 	@ApiModelProperty(value = "Produto do item do pedido", required = true)
 	private Produto produto;
-		
-//	@NotNull(message = "Pedido não pode ser nulo", groups = {GruposValidacao.ValidadorPost.class})
+
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn (name = "cod_pedido", nullable = false, columnDefinition = "int4")
 	@ApiModelProperty(value = "Pedido do item do pedido", required = true)
@@ -117,6 +119,4 @@ public class ItemPedido {
 				&& Objects.equals(precoUnitario, other.precoUnitario) && Objects.equals(produto, other.produto)
 				&& quantidade == other.quantidade;
 	}
-	
-	
 }

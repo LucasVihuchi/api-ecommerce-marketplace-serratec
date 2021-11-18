@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Objects;
 
+/** DTO de pedido para recebimento de resposta da API de endereço do site ViaCEP
+ */
 public class EnderecoDTO {
 
 	@ApiModelProperty(value = "CEP do endereço", required = true)

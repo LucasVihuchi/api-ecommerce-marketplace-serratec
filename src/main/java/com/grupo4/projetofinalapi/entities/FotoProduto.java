@@ -7,6 +7,8 @@ import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Objects;
 
+/** Classe que representa a entidade foto_produto do banco de dados
+ */
 @Entity
 public class FotoProduto {
     @Id

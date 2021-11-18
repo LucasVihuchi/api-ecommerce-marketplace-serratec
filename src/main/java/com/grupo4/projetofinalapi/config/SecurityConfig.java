@@ -14,6 +14,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/** Classe para configuração da autenticação e autorização da API
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -22,12 +24,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     CustomizadoUserDetailService customizadoUserDetailsService;
 
+    /** Método para configurar o método de autenticação da API
+     *
+     * @param auth objeto construtor para definição de credenciais de acesso
+     * @throws Exception caso ocorra um problema na construção do usuário
+     */
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customizadoUserDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
 
+    /** Método para configurar a segurança da API, definindo níveis de permissão de acesso, proteção contra CRSF e prevenção contra salvamento de seção.
+     * O método aplica o conceito de blacklist para a definição dos níveis de acesso
+     *
+     * @param http objeto que permite a configuração da segurança para as requisições HTTP.
+     * @throws Exception caso ocorra um problema no processo de criação das configurações
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic()
@@ -47,6 +60,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
+    /** Método para definir o estilo de criptografia que será utilizada nas senhas durante o processo de autenticação.
+     *
+     * @return Objeto do tipo BCryptPasswordEncoder
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

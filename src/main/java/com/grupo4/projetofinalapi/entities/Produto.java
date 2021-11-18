@@ -8,13 +8,8 @@ import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.Objects;
 
-/*
- * - Visualizar todos os produtos ou um produto específico pelo nome
- * - Criar um novo produto (com imagem).
- * 
+/** Classe que representa a entidade produto do banco de dados
  */
-
-
 @Entity
 public class Produto {
 

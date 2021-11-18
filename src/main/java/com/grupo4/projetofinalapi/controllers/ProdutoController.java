@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
+/** Classe controller para comunicação externa por outras aplicações com as entidades produto e foto_produto
+ */
 @RestController
 @RequestMapping("/api/v1/produtos")
 public class ProdutoController {
@@ -33,7 +35,11 @@ public class ProdutoController {
 
 	@Autowired
 	private FotoProdutoService fotoProdutoService;
-	
+
+	/** Método para retornar todas os produtos presentes no banco de dados
+	 *
+	 * @return ResponseEntity com List de produtos presentes no banco de dados no corpo da resposta
+	 */
 	@GetMapping
 	@ApiOperation(value = "Retorna todos os produtos", notes = "Retornar produtos")
 	@ApiResponses(value = {
@@ -44,7 +50,12 @@ public class ProdutoController {
 
 		return ResponseEntity.ok().body(ProdutoDTO.converterParaListaProdutosDTO(listaProdutos));
 	}
-	
+
+	/** Método para retornar uma List de produtos que contém parte do nome
+	 *
+	 * @param nome nome de produto que deve ser pesquisado
+	 * @return ResponseEntity com List de produtos correspondente parcialmente ou totalmente ao nome fornecido no corpo da resposta
+	 */
 	@GetMapping("{nome}")
 	@ApiOperation(value = "Retorna os produtos pelo nome", notes = "Retornar produtos por nome")
 	@ApiResponses(value = {
@@ -55,6 +66,13 @@ public class ProdutoController {
 		return ResponseEntity.ok().body(ProdutoDTO.converterParaListaProdutosDTO(listaProdutos));
 	}
 
+	/** Método para inserir um produto e sua foto no banco de dados
+	 *
+	 * @param file foto do produto a ser inserida no banco de dados
+	 * @param produto produto a ser inserido no banco de dados
+	 * @param usuarioAutenticado credenciais do usuário que são passadas na requisição
+	 * @return ResponseEntity com o produto cadastrado no banco de dados no corpo da resposta
+	 */
 	@PostMapping
 	@PreAuthorize("hasRole('ROLE_usuario')")
 	@ApiOperation(value = "Insere um produto", notes = "Inserir produto")
@@ -83,6 +101,11 @@ public class ProdutoController {
 		return ResponseEntity.created(uri).body(new ProdutoDTO(produtoTemp));
 	}
 
+	/** Método para retornar a foto do produto associado ao id fornecido
+	 *
+	 * @param id id do produto
+	 * @return ResponseEntity com a foto correspondente ao id do produto fornecido
+	 */
 	@GetMapping("{id}/foto")
 	@ApiOperation(value = "Retorna foto do produto pelo id", notes = "Retornar foto de produtos por id")
 	@ApiResponses(value = {

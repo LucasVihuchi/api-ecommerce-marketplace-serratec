@@ -12,6 +12,8 @@ import org.hibernate.validator.constraints.br.CPF;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
+/** DTO da entidade usuário
+ */
 @JsonIgnoreProperties(value = {"ehVendedor"}, allowGetters = true)
 public class UsuarioDTO {
 
@@ -103,6 +105,10 @@ public class UsuarioDTO {
 		this.endereco = endereco;
 	}
 
+	/** Construtor que constrói um usuárioDTO a partir de um usuário
+	 *
+	 * @param usuario usuário que será convertido
+	 */
 	public UsuarioDTO(Usuario usuario) {
 		this.id = usuario.getId();
 		this.nome = usuario.getNome();
@@ -219,6 +225,10 @@ public class UsuarioDTO {
 		this.endereco = endereco;
 	}
 
+	/** Método para converter um usuárioDTO para Usuário
+	 *
+	 * @return UsuárioDTO convertido para usuário
+	 */
 	public Usuario converterParaUsuario() {
 		return new Usuario(
 				this.id,

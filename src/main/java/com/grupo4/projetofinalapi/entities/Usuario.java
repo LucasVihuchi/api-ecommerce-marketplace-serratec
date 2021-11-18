@@ -11,11 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-/*
- * Precisamos fazer o metodo post, put, delete:
- * - Atualizar seus próprios dados pessoais.
- * - Deletar sua própria conta.
- * - Um cliente poderá se cadastrar livremente.
+/** Classe que representa a entidade usuario do banco de dados
  */
 @Entity
 public class Usuario {
@@ -173,16 +169,13 @@ public class Usuario {
 		return id;
 	}
 
-
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-
 	public String getNome() {
 		return nome;
 	}
-
 
 	public void setNome(String nome) {
 		this.nome = nome;

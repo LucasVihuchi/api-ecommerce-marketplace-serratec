@@ -12,8 +12,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Classe para capturar exceções que ocorrem pela existência de um recurso no banco de dados e fornecer tratamento customizado
+ */
 @ControllerAdvice
 public class RecursoExistenteExceptionHandler {
+
+	/** Método para capturar exceções que ocorrem pela existência de um recurso no banco de dados e fornecer tratamento customizado
+	 *
+	 * @param ex exceção que foi capturada pelo handler
+	 * @return ResponseEntity com o detalhamento da exceção no corpo da resposta
+	 */
 	@ExceptionHandler(
 			{CategoriaExistenteException.class,
 			ProdutoExistenteException.class,

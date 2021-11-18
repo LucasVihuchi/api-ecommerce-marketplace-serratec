@@ -16,6 +16,8 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Classe service para realizar a interface entre os controllers e o repository de ItemPedido
+ */
 @Service
 public class ItemPedidoService {
 
@@ -25,6 +27,13 @@ public class ItemPedidoService {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+    /** Método para atualizar o List de ItemPedido de um pedido pelo id
+     *
+     * @param id id do pedido que contém a lista a ser atualizada
+     * @param vendedor vendedor associado ao pedido
+     * @param listaItemPedido List de ItemPedido com os novos dados
+     * @return List de ItemPedido atualizado
+     */
     public List<ItemPedido> atualizarListaItemPedido(Long id, Usuario vendedor, List<ItemPedido> listaItemPedido) {
         List<ItemPedido> listaItemPedidoBD = itemPedidoRepository.findAllByPedidoId(id);
         verificaListaItemPedido(vendedor, listaItemPedido);
@@ -46,17 +55,30 @@ public class ItemPedidoService {
         return itemPedidoRepository.saveAll(listaItemPedido);
     }
 
+    /** Método para deletar um ItemPedido do banco de dados
+     *
+     * @param itemPedido ItemPedido a ser deletado
+     */
     @Transactional
     public void deletarItemPedido(ItemPedido itemPedido) {
         ItemPedido itemPedidoBD = itemPedidoRepository.findById(itemPedido.getId()).get();
-//        itemPedidoBD.setPedido(null);
         itemPedidoRepository.deletaItemPedidoById(itemPedido.getId());
     }
 
+    /** Método para retornar a lista de ItemPedido de um pedido pelo seu id
+     *
+     * @param id id do pedido
+     * @return List de ItemPedido do pedido
+     */
     public List<ItemPedido> retornarListaItemPedidoPorPedidoId(Long id) {
         return itemPedidoRepository.findAllByPedidoId(id);
     }
 
+    /** Método para verificar a validade de uma lista de ItemPedido
+     *
+     * @param vendedor vendedor ao qual o pedido está associado
+     * @param listaItemPedido List de ItemPedido verificado
+     */
     public void verificaListaItemPedido(Usuario vendedor, List<ItemPedido> listaItemPedido) {
         List<Long> indices = new ArrayList<>();
         for(ItemPedido itemPedidoAtual : listaItemPedido) {

@@ -3,6 +3,8 @@ package com.grupo4.projetofinalapi.entities;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/** Classe para definir a estrutura das respostas de erro
+ */
 public class ErroRespostaBody {
 	private LocalDateTime horarioErro;
 	private int status;

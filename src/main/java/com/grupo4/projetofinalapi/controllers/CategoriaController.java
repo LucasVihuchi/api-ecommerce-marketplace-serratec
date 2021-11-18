@@ -16,13 +16,19 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+/** Classe controller para comunicação externa por outras aplicações com a entidade categoria
+ */
 @RestController
 @RequestMapping("/api/v1/categorias")
 public class CategoriaController {
 	
 	@Autowired
 	private CategoriaService categoriaService;
-	
+
+	/** Método para retornar todas as categorias presentes no banco de dados
+	 *
+	 * @return ResponseEntity com List de categorias presentes no banco de dados no corpo da resposta
+	 */
 	@GetMapping
 	@ApiOperation(value = "Retorna todas as categorias", notes = "Retornar categorias")
 	@ApiResponses(value = {
@@ -31,7 +37,12 @@ public class CategoriaController {
 	public ResponseEntity<List<Categoria>> obterCategorias(){
 		return ResponseEntity.ok().body(categoriaService.obterCategorias());
 	}
-	
+
+	/** Método para retornar uma categoria pelo seu nome
+	 *
+	 * @param nome nome da categoria a ser retornada
+	 * @return ResponseEntity com categoria correspondente ao nome fornecido no corpo da resposta
+	 */
 	@GetMapping("{nome}")
 	@ApiOperation(value = "Retorna as categorias pelo nome", notes = "Retornar categorias por nome")
 	@ApiResponses(value = {
@@ -41,7 +52,12 @@ public class CategoriaController {
 	public ResponseEntity<Categoria> obterCategoriaPorNome(@PathVariable String nome){
 		return ResponseEntity.ok().body(categoriaService.obterCategoriaPorNome(nome));
 	}
-	
+
+	/** Método para inserir uma categoria no banco de dados
+	 *
+	 * @param categoria categoria a ser adicionada no banco de dados
+	 * @return ReponseEntity com categoria que foi inserida no banco de dados
+	 */
 	@PostMapping
 	@PreAuthorize("hasRole('ROLE_usuario')")
 	@ApiOperation(value = "Insere uma categoria", notes = "Inserir categoria")
