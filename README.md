@@ -13,34 +13,35 @@ As seguintes ferramentas foram usadas na construção do projeto:
 
 ### Requisitos
 
-####Utilizar um sistema de login.
+#### Utilizar um sistema de login.
 - [x] Um cliente poderá se cadastrar livremente.
 - [x] Para o cadastro o cliente deverá preencher as informações do cliente.
 - [x] O endereço deverá ser validado através da API Via Cep.
 
-####Após realizado o login o Cliente poderá fazer as seguintes operações:
+#### Após realizado o login o Cliente poderá fazer as seguintes operações:
 - [x] Atualizar seus próprios dados pessoais.
 - [x] Deletar sua própria conta.
 - [x] Criar um novo Pedido
 - [x] Editar um pedido com status de não finalizado.
 - [x] Finalizar um pedido, alterar seu status para finalizado.
 - [x] Ao finalizar o pedido enviar e-mail para o cliente informando data de envio, data de
-entrega, produtos, quantidades e valor final do pedido.
+  entrega, produtos, quantidades e valor final do pedido.
 - [x] Criar uma nova categoria.
 - [x] Criar um novo produto (com imagem).
 - [x] Visualizar todos os pedidos.
 
-#####Sem estar logado ele poderá:
--[x] Visualizar todas as categorias ou uma categoria especifica pelo nome.
--[x] Visualizar todos os produtos ou um produto específico pelo nome.
+#### Sem estar logado ele poderá:
+- [x] Visualizar todas as categorias ou uma categoria especifica pelo nome.
+- [x] Visualizar todos os produtos ou um produto específico pelo nome.
 
-#####Os principais campos deverão ser validados:
+#### Os principais campos deverão ser validados:
 - [x] Cliente: cpf, email e data nascimento.
 - [x] Produto:valor de produto e quantidade em estoque com valores negativos.
 - [x] Pedido: validação para as datas.
 
-######Fazer o tratamento de erro para as validações.
-######Api deverá utilizar como documentação a ferramenta do Swagger.
+**Fazer o tratamento de erro para as validações.**
+<br>
+**Api deverá utilizar como documentação a ferramenta do Swagger.**
 
 ### Integrantes do Grupo
 
