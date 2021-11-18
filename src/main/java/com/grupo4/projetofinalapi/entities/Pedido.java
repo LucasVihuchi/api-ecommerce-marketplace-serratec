@@ -186,9 +186,10 @@ public class Pedido {
 					"</tr>");
 			totalPedido += itemPedidoAtual.getQuantidade() * itemPedidoAtual.getPrecoUnitario();
 		}
+		totalPedido += this.fretePedido;
 		tabelaProdutos = tabelaProdutos.concat("</table>");
 		conteudo = conteudo.concat(tabelaProdutos);
 
-		return conteudo.concat("<h4>Preço total do pedido: R$ " + String.format("%.2f", totalPedido) + "</h4>");
+		return conteudo.concat("<h4>Freto do pedido: R$ " + String.format("%.2f", this.fretePedido) + "<h4>Preço total do pedido: R$ " + String.format("%.2f", totalPedido) + "</h4>");
 	}
 }

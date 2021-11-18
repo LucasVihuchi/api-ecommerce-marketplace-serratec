@@ -14,7 +14,7 @@ import java.time.LocalDate;
 
 /** DTO da entidade usuário
  */
-@JsonIgnoreProperties(value = {"ehVendedor"}, allowGetters = true)
+@JsonIgnoreProperties(value = {"ehVendedor", "bairro", "cidade", "estado"}, allowGetters = true)
 public class UsuarioDTO {
 
 	@ApiModelProperty(value = "Identificador único do usuário")
