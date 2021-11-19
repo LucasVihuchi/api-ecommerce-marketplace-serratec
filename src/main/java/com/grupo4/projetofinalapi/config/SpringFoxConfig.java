@@ -41,7 +41,7 @@ public class SpringFoxConfig {
                 .license("General Public License Version 3")
                 .licenseUrl("https://www.gnu.org/licenses/gpl-3.0.pt-br.html")
                 .version("1.0.0")
-                .contact(new Contact("Grupo 4", "https://www.serratec.org.br", "***REMOVED***"))
+                .contact(new Contact("Grupo 4", "https://www.serratec.org.br", "grupo4.serratec@gmail.com"))
                 .build();
 
         return apiInfo;

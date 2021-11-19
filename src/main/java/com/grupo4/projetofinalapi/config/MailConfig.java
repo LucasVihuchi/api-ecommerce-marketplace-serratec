@@ -25,7 +25,7 @@ public class MailConfig {
     public void sendMail(String para, String assunto, String conteudo) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
-        helper.setFrom("***REMOVED***");
+        helper.setFrom("grupo4.serratec@gmail.com");
         helper.setTo(para);
         helper.setSubject(assunto);
         helper.setText(conteudo, true);
